@@ -5,8 +5,15 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "message_type")
-@JsonSubTypes({ @Type(value = Call.class, name = "CALL"), @Type(value = Msg.class, name = "MSG") })
+	/**
+	 * TODO: See annotation to solve problem where message_type = ""
+	 * @author luislopes
+	 */
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME, 
+		include = JsonTypeInfo.As.PROPERTY,
+		property = "message_type")
+@JsonSubTypes({ @Type(value = Call.class, name = "CALL"), @Type(value = Msg.class, name = "MSG")})
 public abstract class Comms {
 
 	private String messageType;

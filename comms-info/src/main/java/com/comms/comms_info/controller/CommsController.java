@@ -29,8 +29,11 @@ public class CommsController {
 	@Autowired
 	private KpisService kpisService;
 	
+
+	
 	/**
 	 * Parse original file to create array of Json
+	 * Extract and save JSON to file??
 	 * @param date
 	 */
 	@GetMapping("/{date}")
@@ -43,11 +46,8 @@ public class CommsController {
 			URL url = new URL(fileURL);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
-
 			connection.connect();
 			int responseCode = connection.getResponseCode();
-
-			// Extract and save JSON to file??
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -67,20 +67,23 @@ public class CommsController {
 		metrics1.setMissingFields(metricsService.getNumberRowsWithMissingFields(commsData));
 
 		
+				
+		//2. Number of messages with blank content
+		metrics1.setBlankContentMessages(metricsService.getNumberOfMsgsWithBlankContent(commsData));
+		
+		
+		
+		
+		
+		
+		
 		return metrics1;
 	}
 
 	
 	
 	
-//		  //2. Messages with Blank Contents
-//		  
-//		  int messagesWithBlackContent = 0; if(commsData.getMessage_content() == "") {
-//		  messagesWithBlackContent++; }
-//		  
-//		  metrics1.setBlankContentMessages(messagesWithBlackContent);
-//		  
-//		  
+		  
 //		  //3. field Errors
 //		  
 //		  int rowsWithFieldErrors = 0;
