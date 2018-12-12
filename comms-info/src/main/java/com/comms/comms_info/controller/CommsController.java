@@ -68,6 +68,13 @@ public class CommsController {
 		// 3. Number of rows with fields errors
 		metrics1.setFieldErrors(metricsService.getNumberRowsWithFieldErrors(commsData));
 
+		//4. Number of calls origin/destination grouped by country code
+		metrics1.setCallsByCountry(metricsService.getNumberOfCallsByCC(commsData));
+		
+		
+		
+		
+		
 		return metrics1;
 	}
 
