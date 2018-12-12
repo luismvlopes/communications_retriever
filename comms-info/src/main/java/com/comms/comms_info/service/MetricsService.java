@@ -11,7 +11,6 @@ import com.comms.comms_info.model.Msg;
 @Service
 public class MetricsService {
 
-	
 	public int getNumberRowsWithMissingFields(List<Comms> commsData) {
 
 		int rowsWithMissingFields = 0;
@@ -20,19 +19,20 @@ public class MetricsService {
 
 			if (communication instanceof Call) {
 
-				if (communication.getMessageType() == "" || communication.getTimestamp() == null || 
-						communication.getOrigin() == null || communication.getDestination() == null ||						
-						((Call) communication).getDuration() == null || ((Call) communication).getStatusCode() == "" ||
-						((Call) communication).getStatusDescription() == "") {
+				if (communication.getMessageType() == "" || communication.getTimestamp() == null
+						|| communication.getOrigin() == null || communication.getDestination() == null
+						|| ((Call) communication).getDuration() == null || ((Call) communication).getStatusCode() == ""
+						|| ((Call) communication).getStatusDescription() == "") {
 					rowsWithMissingFields++;
 				}
 			}
 
 			if (communication instanceof Msg) {
 
-				if (communication.getMessageType() == "" || communication.getTimestamp() == null || 
-						communication.getOrigin() == null || communication.getDestination() == null ||	
-						((Msg) communication).getMessageContent() == "" || ((Msg) communication).getMessageStatus() == "") {
+				if (communication.getMessageType() == "" || communication.getTimestamp() == null
+						|| communication.getOrigin() == null || communication.getDestination() == null
+						|| ((Msg) communication).getMessageContent() == ""
+						|| ((Msg) communication).getMessageStatus() == "") {
 					rowsWithMissingFields++;
 					break;
 				}
@@ -40,23 +40,21 @@ public class MetricsService {
 		}
 		return rowsWithMissingFields;
 	}
-	
-	
+
 	public int getNumberOfMsgsWithBlankContent(List<Comms> commsData) {
-		
-	int messagesWithBlackContent = 0; 
-	
-	for(Comms comunication : commsData) {
-		
-		if(comunication instanceof Msg) {
-			
-			if(((Msg) comunication).getMessageContent() == "") {
-				messagesWithBlackContent++;
+
+		int messagesWithBlackContent = 0;
+
+		for (Comms comunication : commsData) {
+
+			if (comunication instanceof Msg) {
+
+				if (((Msg) comunication).getMessageContent() == "") {
+					messagesWithBlackContent++;
+				}
 			}
 		}
+		return messagesWithBlackContent;
 	}
-	return messagesWithBlackContent;
-	}
-	
-	
+
 }

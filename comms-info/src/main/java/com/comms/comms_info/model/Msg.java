@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Msg extends Comms {
 
-	private String messageContent;	
+	private String messageContent;
 	private String messageStatus;
-	
-	public Msg() {};
-	
+
+	public Msg() {
+	};
+
 	public Msg(Comms comms) {
 		// TODO Auto-generated constructor stub
 	}
@@ -33,5 +34,4 @@ public class Msg extends Comms {
 		this.messageStatus = messageStatus;
 	}
 
-	
 }

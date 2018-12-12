@@ -25,15 +25,13 @@ public class CommsController {
 
 	@Autowired
 	private MetricsService metricsService;
-	
+
 	@Autowired
 	private KpisService kpisService;
-	
 
-	
 	/**
-	 * Parse original file to create array of Json
-	 * Extract and save JSON to file??
+	 * Parse original file to create array of Json Extract and save JSON to file??
+	 * 
 	 * @param date
 	 */
 	@GetMapping("/{date}")
@@ -48,44 +46,29 @@ public class CommsController {
 			connection.setRequestMethod("GET");
 			connection.connect();
 			int responseCode = connection.getResponseCode();
+			
+			connection.disconnect();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
 	@GetMapping("/metrics")
 	public Metrics returnMetricResults(@RequestBody List<Comms> commsData) {
 
 		Metrics metrics1 = new Metrics();
 
-		// MetricsDTO metrics1 = new MetricsDTO();
-		// Insert data from original JSON:
 		// 1. Rows with Missing fields - Check for missing fields
 
 		metrics1.setMissingFields(metricsService.getNumberRowsWithMissingFields(commsData));
 
-		
-				
-		//2. Number of messages with blank content
+		// 2. Number of messages with blank content
 		metrics1.setBlankContentMessages(metricsService.getNumberOfMsgsWithBlankContent(commsData));
-		
-		
-		
-		
-		
-		
-		
-		return metrics1;
-	}
 
-	
-	
-	
+
+		  //3. field Errors
 		  
-//		  //3. field Errors
-//		  
 //		  int rowsWithFieldErrors = 0;
 //		  
 //		  if(commsData.getMessageType() != "CALL" && commsData.getMessageType() !=
@@ -95,7 +78,11 @@ public class CommsController {
 //		  commsData.getMessage_status() != "DELIVERED") { rowsWithFieldErrors++; }
 //		  
 //		  metrics1.setFieldErrors(rowsWithFieldErrors);
-
+		  
+		  return metrics1;
+	}
+		  
+		  
 	// 4. Number of calls origin/destination grouped by country code
 	// Map with
 	// 5. Relationship between OK/KO calls

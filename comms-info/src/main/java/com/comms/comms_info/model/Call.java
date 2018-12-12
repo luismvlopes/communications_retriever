@@ -7,10 +7,9 @@ public class Call extends Comms {
 	private Integer durationInt;
 	private String statusCode;
 	private String statusDescription;
-	
 
-	public Call() {}
-
+	public Call() {
+	}
 
 	@JsonProperty("duration")
 	public Integer getDuration() {
@@ -41,5 +40,5 @@ public class Call extends Comms {
 	public void setStatusDescription(String statuDescription) {
 		this.statusDescription = statuDescription;
 	}
-	
+
 }
