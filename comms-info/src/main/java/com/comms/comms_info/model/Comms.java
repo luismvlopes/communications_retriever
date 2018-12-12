@@ -11,8 +11,8 @@ public abstract class Comms {
 
 	private String messageType;
 	private Long timestamp;
-	private String origin;
-	private String destination;
+	private Long origin;
+	private Long destination;
 
 	public Comms() {
 	};
@@ -38,22 +38,22 @@ public abstract class Comms {
 	}
 
 	@JsonProperty("origin")
-	public String getOrigin() {
+	public Long getOrigin() {
 		return origin;
 	}
 
 	//@JsonProperty("origin")
-	public void setOrigin(String origin) {
+	public void setOrigin(Long origin) {
 		this.origin = origin;
 	}
 
 	@JsonProperty("destination")
-	public String getDestination() {
+	public Long getDestination() {
 		return destination;
 	}
 
 	//@JsonProperty("destination")
-	public void setDestination(String destination) {
+	public void setDestination(Long destination) {
 		this.destination = destination;
 	}
 

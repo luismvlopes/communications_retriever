@@ -8,8 +8,6 @@ public class Call extends Comms {
 	private String statusCode;
 	private String statusDescription;
 	
-	
-	
 
 	public Call() {}
 
@@ -24,7 +22,6 @@ public class Call extends Comms {
 		this.durationInt = duration;
 	}
 
-
 	@JsonProperty("status_code")
 	public String getStatusCode() {
 		return statusCode;
@@ -35,7 +32,6 @@ public class Call extends Comms {
 		this.statusCode = statusCode;
 	}
 
-
 	@JsonProperty("status_description")
 	public String getStatusDescription() {
 		return statusDescription;
@@ -45,8 +41,5 @@ public class Call extends Comms {
 	public void setStatusDescription(String statuDescription) {
 		this.statusDescription = statuDescription;
 	}
-	
-	
-	
 	
 }

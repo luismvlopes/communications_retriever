@@ -2,7 +2,7 @@ package com.comms.comms_info.model;
 
 import java.util.List;
 
-public class KpisDTO {
+public class Kpis {
 
 	private int processedJSONFiles;
 	private int totalRows;
@@ -12,9 +12,9 @@ public class KpisDTO {
 	private int totalDestinationCountryCodes;
 	private List<Integer> durationJSONProcess;
 	
-	public KpisDTO() {}
+	public Kpis() {}
 
-	public KpisDTO(int processedJSONFiles, int totalRows, int totalCalls, int totalMessages, int totalOriginCountryCodes,
+	public Kpis(int processedJSONFiles, int totalRows, int totalCalls, int totalMessages, int totalOriginCountryCodes,
 			int totalDestinationCountryCodes, List<Integer> durationJSONProcess) {
 		this.processedJSONFiles = processedJSONFiles;
 		this.totalRows = totalRows;

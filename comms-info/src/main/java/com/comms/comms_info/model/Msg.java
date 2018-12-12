@@ -7,6 +7,8 @@ public class Msg extends Comms {
 	private String messageContent;	
 	private String messageStatus;
 	
+	public Msg() {};
+	
 	public Msg(Comms comms) {
 		// TODO Auto-generated constructor stub
 	}

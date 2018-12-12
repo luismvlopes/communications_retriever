@@ -2,7 +2,7 @@ package com.comms.comms_info.model;
 
 import java.util.HashMap;
 
-public class MetricsDTO {
+public class Metrics {
 
 	private int missingFields;
 	private int blankContentMessages;
@@ -11,10 +11,11 @@ public class MetricsDTO {
 	private double OkKoRelationship;
 	private double avgCallDurationByCountry;
 	private HashMap<Integer, String> WordHierarqchy;
-	
-	public MetricsDTO() {};
-	
-	public MetricsDTO(int missingFields, int blankContentMessages, int fieldErrors, int callsByCountry,
+
+	public Metrics() {
+	};
+
+	public Metrics(int missingFields, int blankContentMessages, int fieldErrors, int callsByCountry,
 			double okKoRelationship, double avgCallDurationByCountry, HashMap<Integer, String> wordHierarqchy) {
 		this.missingFields = missingFields;
 		this.blankContentMessages = blankContentMessages;
@@ -80,6 +81,5 @@ public class MetricsDTO {
 	public void setWordHierarqchy(HashMap<Integer, String> wordHierarqchy) {
 		WordHierarqchy = wordHierarqchy;
 	}
-	
-		
+
 }
