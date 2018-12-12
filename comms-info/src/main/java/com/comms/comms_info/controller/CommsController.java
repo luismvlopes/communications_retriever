@@ -3,7 +3,6 @@ package com.comms.comms_info.controller;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,8 @@ public class CommsController {
 	private KpisService kpisService;
 
 	/**
-	 * Parse original file to create array of Json Extract and save JSON to file??
+	 * TODO: Parse original file to create array of Json Extract and save JSON to
+	 * file??
 	 * 
 	 * @param date
 	 */
@@ -46,7 +46,7 @@ public class CommsController {
 			connection.setRequestMethod("GET");
 			connection.connect();
 			int responseCode = connection.getResponseCode();
-			
+
 			connection.disconnect();
 
 		} catch (IOException e) {
@@ -60,63 +60,21 @@ public class CommsController {
 		Metrics metrics1 = new Metrics();
 
 		// 1. Rows with Missing fields - Check for missing fields
-
 		metrics1.setMissingFields(metricsService.getNumberRowsWithMissingFields(commsData));
 
 		// 2. Number of messages with blank content
 		metrics1.setBlankContentMessages(metricsService.getNumberOfMsgsWithBlankContent(commsData));
 
+		// 3. Number of rows with fields errors
+		metrics1.setFieldErrors(metricsService.getNumberRowsWithFieldErrors(commsData));
 
-		  //3. field Errors
-		  
-//		  int rowsWithFieldErrors = 0;
-//		  
-//		  if(commsData.getMessageType() != "CALL" && commsData.getMessageType() !=
-//		  "MSG" || commsData.getMessageType() == "CALL" && commsData.getStatus_code()
-//		  != "OK" && commsData.getStatus_code() != "KO" || commsData.getMessageType()
-//		  == "MSG" && commsData.getMessage_status() != "SEEN" &&
-//		  commsData.getMessage_status() != "DELIVERED") { rowsWithFieldErrors++; }
-//		  
-//		  metrics1.setFieldErrors(rowsWithFieldErrors);
-		  
-		  return metrics1;
+		return metrics1;
 	}
-		  
-		  
-	// 4. Number of calls origin/destination grouped by country code
-	// Map with
-	// 5. Relationship between OK/KO calls
-	// 6. Average call duration by country
-
-	// 7. Word occurrence ranking for the given words in message_content field.
-
-	// metrics1.setOkKoRelationship(123456);
 
 	@GetMapping("/kpis")
 	public Kpis returnKpis() {
 
-		Kpis kpis = new Kpis();
-
-		/*
-		 * Total number of processed JSON files Total number of rows Total number of
-		 * calls Total number of messages Total number of different origin country codes
-		 * (https://en.wikipedia.org/wiki/MSISDN) Total number of different destination
-		 * country codes (https://en.wikipedia.org/wiki/MSISDN) Duration of each JSON
-		 * process
-		 */
-
-		// Mock Kpis
-		kpis.setTotalRows(123);
-		kpis.setTotalCalls(234);
-		kpis.setTotalMessages(23);
-		kpis.setTotalMessages(123);
-		kpis.setTotalOriginCountryCodes(123);
-		kpis.setTotalDestinationCountryCodes(232);
-
-		List<Integer> duration = new LinkedList<Integer>();
-		kpis.setDurationJSONProcess(duration);
-
-		return kpis;
+		return null;
 	}
 
 }

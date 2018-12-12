@@ -57,4 +57,31 @@ public class MetricsService {
 		return messagesWithBlackContent;
 	}
 
+	public int getNumberRowsWithFieldErrors(List<Comms> commsData) {
+
+		int rowsWithFieldErrors = 0;
+
+		for (Comms communication : commsData) {
+
+			if (communication instanceof Call) {
+
+				if (!((Call) communication).getStatusCode().equals("OK")
+						&& !((Call) communication).getStatusCode().equals("KO")) {
+					rowsWithFieldErrors++;
+				}
+			}
+
+			if (communication instanceof Msg) {
+
+				if (!((Msg) communication).getMessageStatus().equals("DELIVERED")
+						&& (!((Msg) communication).getMessageStatus().equals("SEEN"))) {
+					rowsWithFieldErrors++;
+				}
+			}
+		}
+
+		return rowsWithFieldErrors;
+
+	}
+
 }
