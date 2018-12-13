@@ -77,6 +77,9 @@ public class CommsController {
 		//6. Average call duration grouped by country code
 		metrics1.setAvgCallDurationByCountry(metricsService.getAvgCallDurationByCC(commsData));
 		
+		//7. Word occurrence ranking for the given words in message_content field
+		metrics1.setWordHierarqchy(metricsService.getWordOccurrenceRanking(commsData));
+		
 		
 		return metrics1;
 	}

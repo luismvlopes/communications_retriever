@@ -162,7 +162,6 @@ public class MetricsService {
 		return OKcalls + " OK, " + KOcalls + " KO";
 	}
 
-	// Average call duration grouped by country code
 	public Map<String, Integer> getAvgCallDurationByCC(List<Comms> commsData) {
 
 		Map<String, LinkedList<Integer>> countSumDuration = new HashMap<String, LinkedList<Integer>>();
@@ -170,10 +169,10 @@ public class MetricsService {
 		for (Comms communication : commsData) {
 			if (communication instanceof Call) {
 
-				if(communication.getOrigin() == null) {
+				if (communication.getOrigin() == null) {
 					continue;
 				}
-				
+
 				String countryCode = communication.getOrigin().toString().substring(0, 2);
 
 				if (countSumDuration.containsKey(countryCode)) {
@@ -211,10 +210,20 @@ public class MetricsService {
 		return avgCallDurationByCC;
 	}
 
-//		int var = 0;
-//		chamdasPais.length()
-//		
-//		for (int i =0; i < chamadasPais.length(); i++) {
-//			var += chamadasPais.get(i).duration;
-//		}
+	public Map<Integer, String> getWordOccurrenceRanking(List<Comms> commsData) {
+
+		for(Comms communication: commsData) {
+			
+			if(communication instanceof Msg) {
+				
+				String msgContent = ((Msg) communication).getMessageContent();
+				
+				
+				
+			}
+		}
+		
+		
+		return null;
+	}
 }
