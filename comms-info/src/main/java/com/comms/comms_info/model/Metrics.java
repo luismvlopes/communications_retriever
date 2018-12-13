@@ -10,14 +10,14 @@ public class Metrics {
 	private int fieldErrors;
 	private Map<String, Integer> callsByCountry;
 	private String OkKoCallsRelationship;
-	private double avgCallDurationByCountry;
+	private Map<String, Integer> avgCallDurationByCountry;
 	private HashMap<Integer, String> WordHierarqchy;
 
 	public Metrics() {
 	};
 
 	public Metrics(int missingFields, int blankContentMessages, int fieldErrors, HashMap<String, Integer> callsByCountry,
-			String okKoRelationship, double avgCallDurationByCountry, HashMap<Integer, String> wordHierarqchy) {
+			String okKoRelationship, Map<String, Integer> avgCallDurationByCountry, HashMap<Integer, String> wordHierarqchy) {
 		this.missingFields = missingFields;
 		this.blankContentMessages = blankContentMessages;
 		this.fieldErrors = fieldErrors;
@@ -67,11 +67,11 @@ public class Metrics {
 		OkKoCallsRelationship = okKoRelationship;
 	}
 
-	public double getAvgCallDurationByCountry() {
+	public Map<String, Integer> getAvgCallDurationByCountry() {
 		return avgCallDurationByCountry;
 	}
 
-	public void setAvgCallDurationByCountry(double avgCallDurationByCountry) {
+	public void setAvgCallDurationByCountry(Map<String, Integer> avgCallDurationByCountry) {
 		this.avgCallDurationByCountry = avgCallDurationByCountry;
 	}
 

@@ -74,6 +74,8 @@ public class CommsController {
 		//5. Relationship between OK/KO calls
 		metrics1.setOkKoRelationship(metricsService.getRelationshipBetweenOKKOCalls(commsData));
 		
+		//6. Average call duration grouped by country code
+		metrics1.setAvgCallDurationByCountry(metricsService.getAvgCallDurationByCC(commsData));
 		
 		
 		return metrics1;

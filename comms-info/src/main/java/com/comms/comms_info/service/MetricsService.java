@@ -4,9 +4,12 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.stereotype.Service;
 
@@ -51,11 +54,11 @@ public class MetricsService {
 
 		int messagesWithBlackContent = 0;
 
-		for (Comms comunication : commsData) {
+		for (Comms communication : commsData) {
 
-			if (comunication instanceof Msg) {
+			if (communication instanceof Msg) {
 
-				if (((Msg) comunication).getMessageContent() == "") {
+				if (((Msg) communication).getMessageContent() == "") {
 					messagesWithBlackContent++;
 				}
 			}
@@ -135,11 +138,11 @@ public class MetricsService {
 		long OKcalls = 0;
 		long KOcalls = 0;
 
-		for (Comms comunications : commsData) {
+		for (Comms communications : commsData) {
 
-			if (comunications instanceof Call) {
+			if (communications instanceof Call) {
 
-				String messageStatusCode = ((Call) comunications).getStatusCode();
+				String messageStatusCode = ((Call) communications).getStatusCode();
 
 				switch (messageStatusCode) {
 				case "OK":
@@ -158,4 +161,60 @@ public class MetricsService {
 
 		return OKcalls + " OK, " + KOcalls + " KO";
 	}
+
+	// Average call duration grouped by country code
+	public Map<String, Integer> getAvgCallDurationByCC(List<Comms> commsData) {
+
+		Map<String, LinkedList<Integer>> countSumDuration = new HashMap<String, LinkedList<Integer>>();
+
+		for (Comms communication : commsData) {
+			if (communication instanceof Call) {
+
+				if(communication.getOrigin() == null) {
+					continue;
+				}
+				
+				String countryCode = communication.getOrigin().toString().substring(0, 2);
+
+				if (countSumDuration.containsKey(countryCode)) {
+
+					LinkedList<Integer> callsDuration = countSumDuration.get(countryCode);
+					callsDuration.add(((Call) communication).getDuration());
+					countSumDuration.replace(countryCode, callsDuration);
+
+				} else {
+
+					LinkedList<Integer> newCallDurationList = new LinkedList<Integer>();
+					newCallDurationList.add(((Call) communication).getDuration());
+					countSumDuration.put(countryCode, newCallDurationList);
+				}
+			}
+		}
+
+		Map<String, Integer> avgCallDurationByCC = new HashMap<String, Integer>();
+
+		Iterator<Entry<String, LinkedList<Integer>>> it = countSumDuration.entrySet().iterator();
+
+		while (it.hasNext()) {
+			Map.Entry<String, LinkedList<Integer>> pair = (Map.Entry<String, LinkedList<Integer>>) it.next();
+
+			int sumDurations = 0;
+			for (int i = 0; i < pair.getValue().size(); i++) {
+				sumDurations += pair.getValue().get(i);
+			}
+			int avgDuration = sumDurations / pair.getValue().size();
+
+			avgCallDurationByCC.put(pair.getKey(), avgDuration);
+
+		}
+
+		return avgCallDurationByCC;
+	}
+
+//		int var = 0;
+//		chamdasPais.length()
+//		
+//		for (int i =0; i < chamadasPais.length(); i++) {
+//			var += chamadasPais.get(i).duration;
+//		}
 }
