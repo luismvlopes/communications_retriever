@@ -71,7 +71,8 @@ public class CommsController {
 		//4. Number of calls origin/destination grouped by country code
 		metrics1.setCallsByCountry(metricsService.getNumberOfCallsByCC(commsData));
 		
-		
+		//5. Relationship between OK/KO calls
+		metrics1.setOkKoRelationship(metricsService.getRelationshipBetweenOKKOCalls(commsData));
 		
 		
 		

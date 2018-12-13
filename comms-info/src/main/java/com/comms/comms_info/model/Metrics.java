@@ -9,7 +9,7 @@ public class Metrics {
 	private int blankContentMessages;
 	private int fieldErrors;
 	private Map<String, Integer> callsByCountry;
-	private double OkKoRelationship;
+	private String OkKoCallsRelationship;
 	private double avgCallDurationByCountry;
 	private HashMap<Integer, String> WordHierarqchy;
 
@@ -17,12 +17,12 @@ public class Metrics {
 	};
 
 	public Metrics(int missingFields, int blankContentMessages, int fieldErrors, HashMap<String, Integer> callsByCountry,
-			double okKoRelationship, double avgCallDurationByCountry, HashMap<Integer, String> wordHierarqchy) {
+			String okKoRelationship, double avgCallDurationByCountry, HashMap<Integer, String> wordHierarqchy) {
 		this.missingFields = missingFields;
 		this.blankContentMessages = blankContentMessages;
 		this.fieldErrors = fieldErrors;
 		this.callsByCountry = callsByCountry;
-		OkKoRelationship = okKoRelationship;
+		OkKoCallsRelationship = okKoRelationship;
 		this.avgCallDurationByCountry = avgCallDurationByCountry;
 		WordHierarqchy = wordHierarqchy;
 	}
@@ -59,12 +59,12 @@ public class Metrics {
 		this.callsByCountry = callsByCountry;
 	}
 
-	public double getOkKoRelationship() {
-		return OkKoRelationship;
+	public String getOkKoRelationship() {
+		return OkKoCallsRelationship;
 	}
 
-	public void setOkKoRelationship(double okKoRelationship) {
-		OkKoRelationship = okKoRelationship;
+	public void setOkKoRelationship(String okKoRelationship) {
+		OkKoCallsRelationship = okKoRelationship;
 	}
 
 	public double getAvgCallDurationByCountry() {

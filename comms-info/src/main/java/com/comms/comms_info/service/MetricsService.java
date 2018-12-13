@@ -130,4 +130,32 @@ public class MetricsService {
 		return sortedCalls;
 	}
 
+	public String getRelationshipBetweenOKKOCalls(List<Comms> commsData) {
+
+		long OKcalls = 0;
+		long KOcalls = 0;
+
+		for (Comms comunications : commsData) {
+
+			if (comunications instanceof Call) {
+
+				String messageStatusCode = ((Call) comunications).getStatusCode();
+
+				switch (messageStatusCode) {
+				case "OK":
+					OKcalls++;
+					break;
+				case "KO":
+					KOcalls++;
+					break;
+				case "K.O.":
+					KOcalls++;
+				default:
+					continue;
+				}
+			}
+		}
+
+		return OKcalls + " OK, " + KOcalls + " KO";
+	}
 }
