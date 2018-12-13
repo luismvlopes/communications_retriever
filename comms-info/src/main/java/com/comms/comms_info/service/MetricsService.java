@@ -89,28 +89,28 @@ public class MetricsService {
 
 		HashMap<String, Integer> callsByCC = new HashMap<String, Integer>();
 
-		for (Comms communications : commsData) {
-
-			if (communications instanceof Call) {
-
-				Call call1 = (Call) communications;
-
-				String originCC = call1.getOrigin().toString().substring(0, 2);
-				String destinCC = call1.getDestination().toString().substring(0, 2);
-				String originDestinCall = "Origin: " + originCC + ", Destination" + destinCC;
-
-				if (callsByCC.containsKey(originDestinCall)) {
-
-					Integer value = callsByCC.get(originDestinCall);
-					value++;
-					callsByCC.replace(originDestinCall, value);
-
-				} else {
-
-					callsByCC.put(originDestinCall, 1);
-				}
-			}
-		}
+//		for (Comms communications : commsData) {
+//
+//			if (communications instanceof Call) {
+//
+//				Call call1 = (Call) communications;
+//
+//				String originCC = call1.getOrigin().toString().substring(0, 2);
+//				String destinCC = call1.getDestination().toString().substring(0, 2);
+//				String originDestinCall = "Origin: " + originCC + ", Destination" + destinCC;
+//
+//				if (callsByCC.containsKey(originDestinCall)) {
+//
+//					Integer value = callsByCC.get(originDestinCall);
+//					value++;
+//					callsByCC.replace(originDestinCall, value);
+//
+//				} else {
+//
+//					callsByCC.put(originDestinCall, 1);
+//				}
+//			}
+//		}
 		
 		//TODO: Sort callsByCC map by originCC
 
