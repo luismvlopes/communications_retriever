@@ -1,7 +1,12 @@
 package com.comms.comms_info.service;
 
+import static java.util.stream.Collectors.toMap;
+
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -85,36 +90,44 @@ public class MetricsService {
 
 	}
 
-	public HashMap<String, Integer> getNumberOfCallsByCC(List<Comms> commsData) {
+	public Map<String, Integer> getNumberOfCallsByCC(List<Comms> commsData) {
 
-		HashMap<String, Integer> callsByCC = new HashMap<String, Integer>();
+		Map<String, Integer> callsByCC = new HashMap<String, Integer>();
 
-//		for (Comms communications : commsData) {
-//
-//			if (communications instanceof Call) {
-//
-//				Call call1 = (Call) communications;
-//
-//				String originCC = call1.getOrigin().toString().substring(0, 2);
-//				String destinCC = call1.getDestination().toString().substring(0, 2);
-//				String originDestinCall = "Origin: " + originCC + ", Destination" + destinCC;
-//
-//				if (callsByCC.containsKey(originDestinCall)) {
-//
-//					Integer value = callsByCC.get(originDestinCall);
-//					value++;
-//					callsByCC.replace(originDestinCall, value);
-//
-//				} else {
-//
-//					callsByCC.put(originDestinCall, 1);
-//				}
-//			}
-//		}
-		
-		//TODO: Sort callsByCC map by originCC
+		for (Comms communications : commsData) {
 
-		return callsByCC;
+			if (communications instanceof Call) {
+
+				Call call1 = (Call) communications;
+
+				if (call1.getOrigin() == null || call1.getDestination() == null) {
+					continue;
+				}
+
+				String originCC = call1.getOrigin().toString().substring(0, 2);
+				String destinCC = call1.getDestination().toString().substring(0, 2);
+				String originDestinCall = "Orig: " + originCC + ", Dest: " + destinCC;
+
+				System.out.println(originDestinCall);
+
+				if (callsByCC.containsKey(originDestinCall)) {
+
+					Integer value = callsByCC.get(originDestinCall);
+					value++;
+					callsByCC.replace(originDestinCall, value);
+
+				} else {
+
+					callsByCC.put(originDestinCall, 1);
+				}
+			}
+		}
+
+		Map<String, Integer> sortedCalls = callsByCC.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+		return sortedCalls;
 	}
 
 }

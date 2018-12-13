@@ -1,13 +1,14 @@
 package com.comms.comms_info.model;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Metrics {
 
 	private int missingFields;
 	private int blankContentMessages;
 	private int fieldErrors;
-	private HashMap<String, Integer> callsByCountry;
+	private Map<String, Integer> callsByCountry;
 	private double OkKoRelationship;
 	private double avgCallDurationByCountry;
 	private HashMap<Integer, String> WordHierarqchy;
@@ -50,11 +51,11 @@ public class Metrics {
 		this.fieldErrors = fieldErrors;
 	}
 
-	public HashMap<String, Integer> getCallsByCountry() {
+	public Map<String, Integer> getCallsByCountry() {
 		return callsByCountry;
 	}
 
-	public void setCallsByCountry(HashMap<String, Integer> callsByCountry) {
+	public void setCallsByCountry(Map<String, Integer> callsByCountry) {
 		this.callsByCountry = callsByCountry;
 	}
 
