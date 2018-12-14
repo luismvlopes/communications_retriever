@@ -11,13 +11,13 @@ public class Metrics {
 	private Map<String, Integer> callsByCountry;
 	private String OkKoCallsRelationship;
 	private Map<String, Integer> avgCallDurationByCountry;
-	private Map<Integer, String> WordHierarqchy;
+	private Map<String, Integer> WordHierarqchy;
 
 	public Metrics() {
 	};
 
 	public Metrics(int missingFields, int blankContentMessages, int fieldErrors, HashMap<String, Integer> callsByCountry,
-			String okKoRelationship, Map<String, Integer> avgCallDurationByCountry, Map<Integer, String> wordHierarqchy) {
+			String okKoRelationship, Map<String, Integer> avgCallDurationByCountry, Map<String, Integer> wordHierarqchy) {
 		this.missingFields = missingFields;
 		this.blankContentMessages = blankContentMessages;
 		this.fieldErrors = fieldErrors;
@@ -75,11 +75,11 @@ public class Metrics {
 		this.avgCallDurationByCountry = avgCallDurationByCountry;
 	}
 
-	public Map<Integer, String> getWordHierarqchy() {
+	public Map<String, Integer> getWordHierarqchy() {
 		return WordHierarqchy;
 	}
 
-	public void setWordHierarqchy(Map<Integer, String> wordHierarqchy) {
+	public void setWordHierarqchy(Map<String, Integer> wordHierarqchy) {
 		WordHierarqchy = wordHierarqchy;
 	}
 

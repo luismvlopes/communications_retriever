@@ -1,8 +1,7 @@
 package com.comms.comms_info.service;
 
-import static java.util.stream.Collectors.toMap;
-
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -111,26 +110,22 @@ public class MetricsService {
 				String destinCC = call1.getDestination().toString().substring(0, 2);
 				String originDestinCall = "Orig: " + originCC + ", Dest: " + destinCC;
 
-				System.out.println(originDestinCall);
+				Integer count = callsByCC.get(originDestinCall);
 
-				if (callsByCC.containsKey(originDestinCall)) {
-
-					Integer value = callsByCC.get(originDestinCall);
-					value++;
-					callsByCC.replace(originDestinCall, value);
-
-				} else {
-
+				if (count == null) {
 					callsByCC.put(originDestinCall, 1);
+				} else {
+					callsByCC.put(originDestinCall, count + 1);
 				}
 			}
 		}
 
-		Map<String, Integer> sortedCalls = callsByCC.entrySet().stream()
-				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+		// TODO Verify if this sorting works
+//		Map<String, Integer> sortedCalls = callsByCC.entrySet().stream()
+//				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+//				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-		return sortedCalls;
+		return sortMapByValue(callsByCC, true);
 	}
 
 	public String getRelationshipBetweenOKKOCalls(List<Comms> commsData) {
@@ -210,20 +205,63 @@ public class MetricsService {
 		return avgCallDurationByCC;
 	}
 
-	public Map<Integer, String> getWordOccurrenceRanking(List<Comms> commsData) {
+	public Map<String, Integer> getWordOccurrenceRanking(List<Comms> commsData) {
 
-		for(Comms communication: commsData) {
-			
-			if(communication instanceof Msg) {
-				
+		Map<String, Integer> wordRanking = new HashMap<String, Integer>();
+
+		for (Comms communication : commsData) {
+
+			if (communication instanceof Msg) {
+
 				String msgContent = ((Msg) communication).getMessageContent();
-				
-				
-				
+				String[] words = msgContent.split(" ");
+
+				for (String word : words) {
+					if (word.matches("[a-zA-Z]+")) {
+
+						Integer count = wordRanking.get(word);
+
+						if (count == null) {
+							wordRanking.put(word, 1);
+						} else {
+							wordRanking.put(word, count + 1);
+						}
+					}
+				}
 			}
 		}
-		
-		
-		return null;
+
+		return sortMapByValue(wordRanking, true);
 	}
+
+	public static Map<String, Integer> sortMapByValue(Map<String, Integer> hmap, boolean descendingOrder) {
+
+		List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(hmap.entrySet());
+
+		Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+				return (o1.getValue().compareTo(o2.getValue()));
+			}
+		});
+
+		Map<String, Integer> tempMap = new LinkedHashMap<String, Integer>();
+		for (Map.Entry<String, Integer> aa : list) {
+			tempMap.put(aa.getKey(), aa.getValue());
+		}
+
+		if (descendingOrder) {
+
+			Map<String, Integer> reversedSortMap = new LinkedHashMap<>();
+
+			tempMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+					.forEachOrdered(entry -> reversedSortMap.put(entry.getKey(), entry.getValue()));
+
+			tempMap = reversedSortMap;
+		}
+
+		System.out.println("Sorted map by keys: " + tempMap);
+
+		return tempMap;
+	}
+
 }
