@@ -1,7 +1,7 @@
 package com.comms.comms_info.controller;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -28,35 +28,62 @@ public class CommsController {
 	@Autowired
 	private KpisService kpisService;
 
+	private int processedJsonFilesCounter = 0;
+	private int totalRowsead = 0;
+
 	/**
-	 * TODO: Parse original file to create array of Json Extract and save JSON to
-	 * file??
+	 * TODO: Copy file from url to new file in folder
+	 * Replace necessary characters to read as Json
+	 * Convert to Java Object?
+	 * 
 	 * 
 	 * @param date
 	 */
 	@GetMapping("/{date}")
-	public void loadCommsData(@RequestBody @PathVariable String date) {
+	public void loadCommsData(@PathVariable String date) {
 
 		String fileURL = "https://raw.githubusercontent.com/vas-test/test1/master/logs/MCP_" + date + ".json";
 
+		processedJsonFilesCounter++;
+		
 		try {
-
-			URL url = new URL(fileURL);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
-			connection.connect();
-			int responseCode = connection.getResponseCode();
-
-			connection.disconnect();
-
-		} catch (IOException e) {
+		URL url = new URL(fileURL);
+		InputStream in = url.openStream();
+		//Files.copy(in, Paths.get("/test/testJsonFile.txt"), StandardCopyOption.REPLACE_EXISTING);
+		
+		} catch(IOException e) {
+			System.out.println("Exception in IO");
 			e.printStackTrace();
 		}
+		
+
+//			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+//
+//			String inputLine;
+//			while((inputLine = in.readLine()) != null) {
+//				System.out.println(inputLine);
+//				totalRowsead++;
+//				
+//			}
+//			in.close();
+//			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//			connection.setRequestMethod("GET");
+//			connection.connect();
+//			int responseCode = connection.getResponseCode();
+//
+//			System.out.println("Connection established");
+//			
+//			connection.disconnect();
+//			
+//			System.out.println("Connection ended");
+
+	
 	}
 
 	@GetMapping("/metrics")
 	public Metrics returnMetricResults(@RequestBody List<Comms> commsData) {
 
+		
 		Metrics metrics1 = new Metrics();
 
 		// 1. Rows with Missing fields - Check for missing fields
@@ -68,26 +95,31 @@ public class CommsController {
 		// 3. Number of rows with fields errors
 		metrics1.setFieldErrors(metricsService.getNumberRowsWithFieldErrors(commsData));
 
-		//4. Number of calls origin/destination grouped by country code
+		// 4. Number of calls origin/destination grouped by country code
 		metrics1.setCallsByCountry(metricsService.getNumberOfCallsByCC(commsData));
-		
-		//5. Relationship between OK/KO calls
+
+		// 5. Relationship between OK/KO calls
 		metrics1.setOkKoRelationship(metricsService.getRelationshipBetweenOKKOCalls(commsData));
-		
-		//6. Average call duration grouped by country code
+
+		// 6. Average call duration grouped by country code
 		metrics1.setAvgCallDurationByCountry(metricsService.getAvgCallDurationByCC(commsData));
-		
-		//7. Word occurrence ranking for the given words in message_content field
+
+		// 7. Word occurrence ranking for the given words in message_content field
 		metrics1.setWordHierarqchy(metricsService.getWordOccurrenceRanking(commsData));
-		
-		
+
 		return metrics1;
 	}
 
 	@GetMapping("/kpis")
 	public Kpis returnKpis() {
 
-		return null;
+		Kpis kpis1 = new Kpis();
+
+		kpis1.setProcessedJSONFiles(processedJsonFilesCounter);
+
+		kpis1.setTotalRows(totalRowsead);
+
+		return kpis1;
 	}
 
 }
