@@ -1,8 +1,6 @@
 package com.comms.comms_info.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import com.comms.comms_info.model.Comms;
 import com.comms.comms_info.model.Kpis;
 import com.comms.comms_info.model.Metrics;
 import com.comms.comms_info.service.KpisService;
+import com.comms.comms_info.service.LoadDataService;
 import com.comms.comms_info.service.MetricsService;
 
 @RestController
@@ -28,62 +27,43 @@ public class CommsController {
 	@Autowired
 	private KpisService kpisService;
 
-	private int processedJsonFilesCounter = 0;
-	private int totalRowsead = 0;
+	@Autowired
+	private LoadDataService loadDataService;
+
+	
 
 	/**
-	 * TODO: Copy file from url to new file in folder
-	 * Replace necessary characters to read as Json
-	 * Convert to Java Object?
+	 * TODO: Copy file from url to new file in folder Replace necessary characters
+	 * to read as Json and serialize it Convert to Java Object? GSON/Jackson ?
 	 * 
 	 * 
 	 * @param date
+	 * @throws IOException
 	 */
 	@GetMapping("/{date}")
 	public void loadCommsData(@PathVariable String date) {
 
-		String fileURL = "https://raw.githubusercontent.com/vas-test/test1/master/logs/MCP_" + date + ".json";
-
-		processedJsonFilesCounter++;
+		String destinAddress = "tempJson.json";
 		
-		try {
-		URL url = new URL(fileURL);
-		InputStream in = url.openStream();
-		//Files.copy(in, Paths.get("/test/testJsonFile.txt"), StandardCopyOption.REPLACE_EXISTING);
+		loadDataService.extractJsonFile(date, destinAddress);
 		
-		} catch(IOException e) {
-			System.out.println("Exception in IO");
-			e.printStackTrace();
-		}
-		
-
-//			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-//
-//			String inputLine;
-//			while((inputLine = in.readLine()) != null) {
-//				System.out.println(inputLine);
-//				totalRowsead++;
-//				
-//			}
-//			in.close();
-//			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//			connection.setRequestMethod("GET");
-//			connection.connect();
-//			int responseCode = connection.getResponseCode();
-//
-//			System.out.println("Connection established");
-//			
-//			connection.disconnect();
-//			
-//			System.out.println("Connection ended");
-
+		loadDataService.modifyJsonFile(destinAddress);
 	
+		//Replace characters to make the file a readable Json
+		
+		//Put this in an additional method and object
+		
+		
 	}
 
 	@GetMapping("/metrics")
 	public Metrics returnMetricResults(@RequestBody List<Comms> commsData) {
 
-		
+		/**
+		 * TODO change input, make method to go get file Json from data Use @RequestBody
+		 * to test metrics methods
+		 */
+
 		Metrics metrics1 = new Metrics();
 
 		// 1. Rows with Missing fields - Check for missing fields
@@ -115,9 +95,9 @@ public class CommsController {
 
 		Kpis kpis1 = new Kpis();
 
-		kpis1.setProcessedJSONFiles(processedJsonFilesCounter);
+		kpis1.setProcessedJSONFiles(loadDataService.getProcessedJsonFilesNumber());
 
-		kpis1.setTotalRows(totalRowsead);
+		kpis1.setTotalRows(loadDataService.getTotalRowsRead());
 
 		return kpis1;
 	}
