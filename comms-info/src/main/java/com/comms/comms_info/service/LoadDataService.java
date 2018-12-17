@@ -15,14 +15,14 @@ public class LoadDataService {
 
 	private int processedJsonFilesCounter = 0;
 	private int totalRowsRead = 0;
-	
-	
+
 	public void extractJsonFile(String date, String destinAdress) {
 
 		String fileURL = "https://raw.githubusercontent.com/vas-test/test1/master/logs/MCP_" + date + ".json";
-
 		URL url;
+
 		try {
+
 			url = new URL(fileURL);
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -33,8 +33,6 @@ public class LoadDataService {
 
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
-				System.out.println(inputLine);
-
 				this.totalRowsRead++;
 
 				writer.write(inputLine);
@@ -42,7 +40,6 @@ public class LoadDataService {
 			writer.close();
 			in.close();
 
-			
 			tempFile.deleteOnExit();
 
 		} catch (IOException e) {
@@ -50,16 +47,7 @@ public class LoadDataService {
 		}
 		this.processedJsonFilesCounter++;
 	}
-	
-	public int getProcessedJsonFilesNumber() {
-		return processedJsonFilesCounter;
-	}
-	
-	public int getTotalRowsRead() {
-		return totalRowsRead;
-	}
 
-	
 	public void modifyJsonFile(String fileAddress) {
 
 		File fileToBeModified = new File(fileAddress);
@@ -69,18 +57,13 @@ public class LoadDataService {
 		FileWriter writer = null;
 
 		try {
+
 			reader = new BufferedReader(new FileReader(fileToBeModified));
 
 			String line = reader.readLine();
+			String newContent = "[" + line.replaceAll("\\}\\{", "\\},\\{") + "]";
 
-			//Add initial brackets
-			
-			while (line != null) {
-				oldContent = oldContent + line + System.lineSeparator();
-				line = reader.readLine();
-			}
-
-			String newContent = oldContent.replaceAll("}{", "},{");
+			System.out.println("New line: " + newContent);
 
 			writer = new FileWriter(fileToBeModified);
 			writer.write(newContent);
@@ -90,11 +73,18 @@ public class LoadDataService {
 		} finally {
 			try {
 				reader.close();
-				// writer2.close();
+				writer.close();
 			} catch (IOException e2) {
 				e2.printStackTrace();
 			}
 		}
 	}
 
+	public int getProcessedJsonFilesNumber() {
+		return processedJsonFilesCounter;
+	}
+
+	public int getTotalRowsRead() {
+		return totalRowsRead;
+	}
 }

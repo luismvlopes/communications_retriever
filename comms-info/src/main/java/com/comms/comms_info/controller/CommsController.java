@@ -35,8 +35,6 @@ public class CommsController {
 	/**
 	 * TODO: Copy file from url to new file in folder Replace necessary characters
 	 * to read as Json and serialize it Convert to Java Object? GSON/Jackson ?
-	 * 
-	 * 
 	 * @param date
 	 * @throws IOException
 	 */
