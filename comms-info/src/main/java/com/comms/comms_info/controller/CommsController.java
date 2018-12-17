@@ -30,11 +30,10 @@ public class CommsController {
 	@Autowired
 	private LoadDataService loadDataService;
 
-	
-
 	/**
 	 * TODO: Copy file from url to new file in folder Replace necessary characters
 	 * to read as Json and serialize it Convert to Java Object? GSON/Jackson ?
+	 * 
 	 * @param date
 	 * @throws IOException
 	 */
@@ -42,16 +41,13 @@ public class CommsController {
 	public void loadCommsData(@PathVariable String date) {
 
 		String destinAddress = "tempJson.json";
-		
+
 		loadDataService.extractJsonFile(date, destinAddress);
-		
+
 		loadDataService.modifyJsonFile(destinAddress);
-	
-		//Replace characters to make the file a readable Json
-		
-		//Put this in an additional method and object
-		
-		
+
+		loadDataService.accessDataFile(destinAddress);
+
 	}
 
 	@GetMapping("/metrics")
@@ -64,25 +60,18 @@ public class CommsController {
 
 		Metrics metrics1 = new Metrics();
 
-		// 1. Rows with Missing fields - Check for missing fields
 		metrics1.setMissingFields(metricsService.getNumberRowsWithMissingFields(commsData));
 
-		// 2. Number of messages with blank content
 		metrics1.setBlankContentMessages(metricsService.getNumberOfMsgsWithBlankContent(commsData));
 
-		// 3. Number of rows with fields errors
 		metrics1.setFieldErrors(metricsService.getNumberRowsWithFieldErrors(commsData));
 
-		// 4. Number of calls origin/destination grouped by country code
 		metrics1.setCallsByCountry(metricsService.getNumberOfCallsByCC(commsData));
 
-		// 5. Relationship between OK/KO calls
 		metrics1.setOkKoRelationship(metricsService.getRelationshipBetweenOKKOCalls(commsData));
 
-		// 6. Average call duration grouped by country code
 		metrics1.setAvgCallDurationByCountry(metricsService.getAvgCallDurationByCC(commsData));
 
-		// 7. Word occurrence ranking for the given words in message_content field
 		metrics1.setWordHierarqchy(metricsService.getWordOccurrenceRanking(commsData));
 
 		return metrics1;

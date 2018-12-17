@@ -2,13 +2,19 @@ package com.comms.comms_info.service;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import com.comms.comms_info.model.Comms;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class LoadDataService {
@@ -63,8 +69,6 @@ public class LoadDataService {
 			String line = reader.readLine();
 			String newContent = "[" + line.replaceAll("\\}\\{", "\\},\\{") + "]";
 
-			System.out.println("New line: " + newContent);
-
 			writer = new FileWriter(fileToBeModified);
 			writer.write(newContent);
 
@@ -80,6 +84,30 @@ public class LoadDataService {
 		}
 	}
 
+	public List<Comms> accessDataFile(String destinAddress) {
+
+		BufferedReader reader = null;;
+		String jsonArray = "";
+		List<Comms> commsData = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try {
+			reader = new BufferedReader(new FileReader(new File(destinAddress)));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
+		try {
+			jsonArray = reader.readLine();
+			reader.close();
+			commsData = objectMapper.readValue(jsonArray, new TypeReference<List<Comms>>(){});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return commsData;
+	}
+
 	public int getProcessedJsonFilesNumber() {
 		return processedJsonFilesCounter;
 	}
@@ -87,4 +115,5 @@ public class LoadDataService {
 	public int getTotalRowsRead() {
 		return totalRowsRead;
 	}
+
 }
