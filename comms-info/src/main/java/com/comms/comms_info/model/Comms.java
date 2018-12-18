@@ -1,19 +1,12 @@
 package com.comms.comms_info.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-/**
- * TODO: Find a way (annotation?) to solve problem where message_type = ""
- * 
- * @author luislopes
- */
-//@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "message_type")
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "message_type", defaultImpl = Void.class)
 @JsonSubTypes({ @Type(value = Call.class, name = "CALL"), @Type(value = Msg.class, name = "MSG") })
 public abstract class Comms {
 

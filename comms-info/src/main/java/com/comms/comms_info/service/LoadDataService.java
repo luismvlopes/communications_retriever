@@ -91,7 +91,7 @@ public class LoadDataService {
 		String jsonArray = "";
 		List<Comms> commsData = null;
 		ObjectMapper objectMapper = new ObjectMapper();
-		
+	
 		
 		try {
 			reader = new BufferedReader(new FileReader(new File(tempFileAddress)));
