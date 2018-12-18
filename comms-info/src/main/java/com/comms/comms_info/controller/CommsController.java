@@ -1,6 +1,5 @@
 package com.comms.comms_info.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.comms.comms_info.model.Comms;
 import com.comms.comms_info.model.Kpis;
 import com.comms.comms_info.model.Metrics;
-import com.comms.comms_info.service.KpisService;
 import com.comms.comms_info.service.LoadDataService;
 import com.comms.comms_info.service.MetricsService;
 
@@ -25,18 +23,8 @@ public class CommsController {
 	private MetricsService metricsService;
 
 	@Autowired
-	private KpisService kpisService;
-
-	@Autowired
 	private LoadDataService loadDataService;
 
-	/**
-	 * TODO: Copy file from url to new file in folder Replace necessary characters
-	 * to read as Json and serialize it Convert to Java Object? GSON/Jackson ?
-	 * 
-	 * @param date
-	 * @throws IOException
-	 */
 	@GetMapping("/{date}")
 	public void loadCommsData(@PathVariable String date) {
 
@@ -46,18 +34,15 @@ public class CommsController {
 
 		loadDataService.modifyJsonFile(destinAddress);
 
-		loadDataService.accessDataFile(destinAddress);
+		loadDataService.setTempFileAddress(destinAddress);
 
 	}
 
 	@GetMapping("/metrics")
 	public Metrics returnMetricResults(@RequestBody List<Comms> commsData) {
 
-		/**
-		 * TODO change input, make method to go get file Json from data Use @RequestBody
-		 * to test metrics methods
-		 */
-
+		//List<Comms> commsData = loadDataService.accessDataFile();
+		
 		Metrics metrics1 = new Metrics();
 
 		metrics1.setMissingFields(metricsService.getNumberRowsWithMissingFields(commsData));
@@ -78,6 +63,7 @@ public class CommsController {
 	}
 
 	@GetMapping("/kpis")
+	
 	public Kpis returnKpis() {
 
 		Kpis kpis1 = new Kpis();

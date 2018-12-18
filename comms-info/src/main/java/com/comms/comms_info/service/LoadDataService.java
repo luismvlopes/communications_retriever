@@ -21,6 +21,7 @@ public class LoadDataService {
 
 	private int processedJsonFilesCounter = 0;
 	private int totalRowsRead = 0;
+	private String tempFileAddress; 
 
 	public void extractJsonFile(String date, String destinAdress) {
 
@@ -84,15 +85,16 @@ public class LoadDataService {
 		}
 	}
 
-	public List<Comms> accessDataFile(String destinAddress) {
+	public List<Comms> accessDataFile() {
 
 		BufferedReader reader = null;;
 		String jsonArray = "";
 		List<Comms> commsData = null;
 		ObjectMapper objectMapper = new ObjectMapper();
-
+		
+		
 		try {
-			reader = new BufferedReader(new FileReader(new File(destinAddress)));
+			reader = new BufferedReader(new FileReader(new File(tempFileAddress)));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -115,5 +117,11 @@ public class LoadDataService {
 	public int getTotalRowsRead() {
 		return totalRowsRead;
 	}
+
+	public void setTempFileAddress(String tempFileAddress) {
+		this.tempFileAddress = tempFileAddress;
+	}
+	
+	
 
 }
