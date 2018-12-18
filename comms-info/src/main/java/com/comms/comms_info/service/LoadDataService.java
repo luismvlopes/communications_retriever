@@ -8,7 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +25,25 @@ public class LoadDataService {
 
 	private int processedJsonFilesCounter = 0;
 	private int totalRowsRead = 0;
-	private String tempFileAddress; 
+	private String tempFileAddress;
+
+	Instant start = null;
+	Instant finish = null;
+	Long timeElapsed = Duration.between(start, finish).toMillis();
+	Map<Integer, Long> durationJsonProcess = new HashMap<>();
+
+	public void countInitialTime() {
+		this.start = Instant.now();
+	}
+
+	public void countFinishTime() {
+		this.finish = Instant.now();
+	}
+
+	public Map<Integer, Long> getDurationOfJsonProcess() {
+		durationJsonProcess.put(processedJsonFilesCounter, timeElapsed);
+		return durationJsonProcess;
+	}
 
 	public void extractJsonFile(String date, String destinAdress) {
 
@@ -87,26 +109,27 @@ public class LoadDataService {
 
 	public List<Comms> accessDataFile() {
 
-		BufferedReader reader = null;;
+		BufferedReader reader = null;
+		;
 		String jsonArray = "";
 		List<Comms> commsData = null;
 		ObjectMapper objectMapper = new ObjectMapper();
-	
-		
+
 		try {
 			reader = new BufferedReader(new FileReader(new File(tempFileAddress)));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		try {
 			jsonArray = reader.readLine();
 			reader.close();
-			commsData = objectMapper.readValue(jsonArray, new TypeReference<List<Comms>>(){});
+			commsData = objectMapper.readValue(jsonArray, new TypeReference<List<Comms>>() {
+			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return commsData;
 	}
 
@@ -121,7 +144,5 @@ public class LoadDataService {
 	public void setTempFileAddress(String tempFileAddress) {
 		this.tempFileAddress = tempFileAddress;
 	}
-	
-	
 
 }

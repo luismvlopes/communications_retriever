@@ -24,9 +24,14 @@ public class CommsController {
 	@Autowired
 	private LoadDataService loadDataService;
 
+	private Long timeElapsed = null;
+
 	@GetMapping("/{date}")
 	public void loadCommsData(@PathVariable String date) {
 
+		loadDataService.countInitialTime();
+
+		// Change destination to outside project
 		String destinAddress = "tempJson.json";
 
 		loadDataService.extractJsonFile(date, destinAddress);
@@ -35,14 +40,15 @@ public class CommsController {
 
 		loadDataService.setTempFileAddress(destinAddress);
 
+		loadDataService.countFinishTime();
+
 	}
 
 	@GetMapping("/metrics")
-	public Metrics returnMetricResults(/*@RequestBody List<Comms> commsData*/) {
+	public Metrics returnMetricResults(/* @RequestBody List<Comms> commsData */) {
 
 		List<Comms> commsData = loadDataService.accessDataFile();
-		//System.out.println(commsData.toString());
-		
+
 		Metrics metrics1 = new Metrics();
 
 		metrics1.setMissingFields(metricsService.getNumberRowsWithMissingFields(commsData));
@@ -63,7 +69,7 @@ public class CommsController {
 	}
 
 	@GetMapping("/kpis")
-	
+
 	public Kpis returnKpis() {
 
 		Kpis kpis1 = new Kpis();
@@ -72,7 +78,18 @@ public class CommsController {
 
 		kpis1.setTotalRows(loadDataService.getTotalRowsRead());
 
+		kpis1.setTotalCalls(metricsService.getCallsCounter());
+
+		kpis1.setTotalMessages(metricsService.getMessagesCounter());
+
+		kpis1.setTotalOriginCountryCodes(metricsService.getOriginCountryCodesSet().size());
+
+		kpis1.setTotalDestinationCountryCodes(metricsService.getDestinCountryCodesSet().size());
+
+		kpis1.setDurationJSONProcess(loadDataService.getDurationOfJsonProcess());
+
 		return kpis1;
+
 	}
 
 }

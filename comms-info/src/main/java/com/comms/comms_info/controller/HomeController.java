@@ -9,9 +9,9 @@ public class HomeController {
 	@RequestMapping("/")
 	public String home() {
 
-		return "Welcome to the Communications info retriever! Let's check those calls... "
-				+ "\nInsert here the date of the calls you want info" + "\n FORM to add date YYYYMMDD"
-				+ "\n BUTTON to submit" + "\n BUTTON to check Metrics" + "\n BUTTON to check KPIs";
+		return "Welcome to the Communications info retriever API!"
+				+ "\n insert the date to load a Json file with communications records"
+				+ "\n use the /metrics endpoint to return several metrics on the loaded Json file"
+				+ "\n use the /kpis endpoint to return key performance indicators on this API";
 	}
-
 }

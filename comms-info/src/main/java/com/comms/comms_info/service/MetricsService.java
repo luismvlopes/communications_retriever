@@ -3,12 +3,14 @@ package com.comms.comms_info.service;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -19,18 +21,24 @@ import com.comms.comms_info.model.Msg;
 @Service
 public class MetricsService {
 
+	private int callsCounter = 0;
+	private int messagesCounter = 0;
+	private Set<String> originCountryCodesSet = new HashSet<>();
+	private Set<String> destinCountryCodesSet = new HashSet<>();
+	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
+		
 	public int getNumberRowsWithMissingFields(List<Comms> commsData) {
-
+		
 		int rowsWithMissingFields = 0;
 
 		for (Comms communication : commsData) {
 
 			if (communication instanceof Call) {
 
+				this.callsCounter++;
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
-						|| ((Call) communication).getDuration() == null || ((Call) communication).getDuration().equals("") 
-						||((Call) communication).getStatusCode() == ""
+						|| ((Call) communication).getDuration() == null || ((Call) communication).getStatusCode() == ""
 						|| ((Call) communication).getStatusDescription() == "") {
 					rowsWithMissingFields++;
 				}
@@ -38,6 +46,7 @@ public class MetricsService {
 
 			if (communication instanceof Msg) {
 
+				this.messagesCounter++;
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
 						|| ((Msg) communication).getMessageContent() == ""
@@ -108,7 +117,11 @@ public class MetricsService {
 				}
 
 				String originCC = call1.getOrigin().toString().substring(0, 2);
+				originCountryCodesSet.add(originCC);
+
 				String destinCC = call1.getDestination().toString().substring(0, 2);
+				destinCountryCodesSet.add(destinCC);
+
 				String originDestinCall = "Orig: " + originCC + ", Dest: " + destinCC;
 
 				Integer count = callsByCC.get(originDestinCall);
@@ -163,8 +176,8 @@ public class MetricsService {
 				if (communication.getOrigin() == null) {
 					continue;
 				}
-				
-				if(((Call) communication).getDuration() == null) {
+
+				if (((Call) communication).getDuration() == null) {
 					continue;
 				}
 
@@ -264,6 +277,26 @@ public class MetricsService {
 		System.out.println("Sorted map by keys: " + tempMap);
 
 		return tempMap;
+	}
+
+	public int getCallsCounter() {
+		return callsCounter;
+	}
+
+	public int getMessagesCounter() {
+		return messagesCounter;
+	}
+
+	public Set<String> getOriginCountryCodesSet() {
+		return originCountryCodesSet;
+	}
+
+	public Set<String> getDestinCountryCodesSet() {
+		return destinCountryCodesSet;
+	}
+	
+	public Map<Integer, Long> getDurationOfJsonProcess() {
+		return durationJsonProcessesMap;
 	}
 
 }

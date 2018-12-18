@@ -1,6 +1,6 @@
 package com.comms.comms_info.model;
 
-import java.util.List;
+import java.util.Map;
 
 public class Kpis {
 
@@ -10,12 +10,12 @@ public class Kpis {
 	private int totalMessages;
 	private int totalOriginCountryCodes;
 	private int totalDestinationCountryCodes;
-	private List<Integer> durationJSONProcess;
+	private Map<Integer, Long> durationJSONProcess;
 	
 	public Kpis() {}
 
 	public Kpis(int processedJSONFiles, int totalRows, int totalCalls, int totalMessages, int totalOriginCountryCodes,
-			int totalDestinationCountryCodes, List<Integer> durationJSONProcess) {
+			int totalDestinationCountryCodes, Map<Integer, Long> durationJSONProcess) {
 		this.processedJSONFiles = processedJSONFiles;
 		this.totalRows = totalRows;
 		this.totalCalls = totalCalls;
@@ -73,11 +73,11 @@ public class Kpis {
 		this.totalDestinationCountryCodes = totalDestinationCountryCodes;
 	}
 
-	public List<Integer> getDurationJSONProcess() {
+	public Map<Integer, Long> getDurationJSONProcess() {
 		return durationJSONProcess;
 	}
 
-	public void setDurationJSONProcess(List<Integer> durationJSONProcess) {
+	public void setDurationJSONProcess(Map<Integer, Long> durationJSONProcess) {
 		this.durationJSONProcess = durationJSONProcess;
 	};
 	
