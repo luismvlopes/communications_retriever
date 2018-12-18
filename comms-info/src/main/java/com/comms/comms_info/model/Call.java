@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Call extends Comms {
 
-	private Integer durationInt;
+	private Long durationInt;
 	private String statusCode;
 	private String statusDescription;
 
@@ -12,12 +12,12 @@ public class Call extends Comms {
 	}
 
 	@JsonProperty("duration")
-	public Integer getDuration() {
+	public Long getDuration() {
 		return durationInt;
 	}
 
 	@JsonProperty("duration")
-	public void setDuration(Integer duration) {
+	public void setDuration(Long duration) {
 		this.durationInt = duration;
 	}
 

@@ -29,7 +29,8 @@ public class MetricsService {
 
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
-						|| ((Call) communication).getDuration() == null || ((Call) communication).getStatusCode() == ""
+						|| ((Call) communication).getDuration() == null || ((Call) communication).getDuration().equals("") 
+						||((Call) communication).getStatusCode() == ""
 						|| ((Call) communication).getStatusDescription() == "") {
 					rowsWithMissingFields++;
 				}
@@ -162,19 +163,25 @@ public class MetricsService {
 				if (communication.getOrigin() == null) {
 					continue;
 				}
+				
+				if(((Call) communication).getDuration() == null) {
+					continue;
+				}
 
 				String countryCode = communication.getOrigin().toString().substring(0, 2);
 
 				if (countSumDuration.containsKey(countryCode)) {
 
 					LinkedList<Integer> callsDuration = countSumDuration.get(countryCode);
-					callsDuration.add(((Call) communication).getDuration());
+					Integer duration = Integer.valueOf(((Call) communication).getDuration().intValue());
+					callsDuration.add(duration);
 					countSumDuration.replace(countryCode, callsDuration);
 
 				} else {
 
 					LinkedList<Integer> newCallDurationList = new LinkedList<Integer>();
-					newCallDurationList.add(((Call) communication).getDuration());
+					Integer duration = Integer.valueOf(((Call) communication).getDuration().intValue());
+					newCallDurationList.add(duration);
 					countSumDuration.put(countryCode, newCallDurationList);
 				}
 			}

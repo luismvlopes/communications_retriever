@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,9 +38,10 @@ public class CommsController {
 	}
 
 	@GetMapping("/metrics")
-	public Metrics returnMetricResults(@RequestBody List<Comms> commsData) {
+	public Metrics returnMetricResults(/*@RequestBody List<Comms> commsData*/) {
 
-		//List<Comms> commsData = loadDataService.accessDataFile();
+		List<Comms> commsData = loadDataService.accessDataFile();
+		//System.out.println(commsData.toString());
 		
 		Metrics metrics1 = new Metrics();
 
