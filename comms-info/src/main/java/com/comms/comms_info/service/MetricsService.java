@@ -1,5 +1,10 @@
 package com.comms.comms_info.service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,19 +21,73 @@ import org.springframework.stereotype.Service;
 
 import com.comms.comms_info.model.Call;
 import com.comms.comms_info.model.Comms;
+import com.comms.comms_info.model.Metrics;
 import com.comms.comms_info.model.Msg;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class MetricsService {
+
+	private String tempFileAddress = "tempJson.json";
 
 	private int callsCounter = 0;
 	private int messagesCounter = 0;
 	private Set<String> originCountryCodesSet = new HashSet<>();
 	private Set<String> destinCountryCodesSet = new HashSet<>();
 	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
-		
-	public int getNumberRowsWithMissingFields(List<Comms> commsData) {
-		
+
+	public Metrics getMetrics() {
+
+		Metrics metrics1 = new Metrics();
+
+		List<Comms> commsData = accessDataFile();
+
+		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
+
+		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
+
+		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
+
+		metrics1.setCallsByCountry(getNumberOfCallsByCC(commsData));
+
+		metrics1.setOkKoRelationship(getRelationshipBetweenOKKOCalls(commsData));
+
+		metrics1.setAvgCallDurationByCountry(getAvgCallDurationByCC(commsData));
+
+		metrics1.setWordHierarqchy(getWordOccurrenceRanking(commsData));
+
+		return metrics1;
+	}
+
+	private List<Comms> accessDataFile() {
+
+		BufferedReader reader = null;
+
+		String jsonArray = "";
+		List<Comms> commsData = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try {
+			reader = new BufferedReader(new FileReader(new File(tempFileAddress)));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			jsonArray = reader.readLine();
+			reader.close();
+			commsData = objectMapper.readValue(jsonArray, new TypeReference<List<Comms>>() {
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return commsData;
+	}
+
+	private int getNumberRowsWithMissingFields(List<Comms> commsData) {
+
 		int rowsWithMissingFields = 0;
 
 		for (Comms communication : commsData) {
@@ -59,7 +118,7 @@ public class MetricsService {
 		return rowsWithMissingFields;
 	}
 
-	public int getNumberOfMsgsWithBlankContent(List<Comms> commsData) {
+	private int getNumberOfMsgsWithBlankContent(List<Comms> commsData) {
 
 		int messagesWithBlackContent = 0;
 
@@ -75,7 +134,7 @@ public class MetricsService {
 		return messagesWithBlackContent;
 	}
 
-	public int getNumberRowsWithFieldErrors(List<Comms> commsData) {
+	private int getNumberRowsWithFieldErrors(List<Comms> commsData) {
 
 		int rowsWithFieldErrors = 0;
 
@@ -102,7 +161,7 @@ public class MetricsService {
 
 	}
 
-	public Map<String, Integer> getNumberOfCallsByCC(List<Comms> commsData) {
+	private Map<String, Integer> getNumberOfCallsByCC(List<Comms> commsData) {
 
 		Map<String, Integer> callsByCC = new HashMap<String, Integer>();
 
@@ -137,7 +196,7 @@ public class MetricsService {
 		return sortMapByValue(callsByCC, true);
 	}
 
-	public String getRelationshipBetweenOKKOCalls(List<Comms> commsData) {
+	private String getRelationshipBetweenOKKOCalls(List<Comms> commsData) {
 
 		long OKcalls = 0;
 		long KOcalls = 0;
@@ -166,7 +225,7 @@ public class MetricsService {
 		return OKcalls + " OK, " + KOcalls + " KO";
 	}
 
-	public Map<String, Integer> getAvgCallDurationByCC(List<Comms> commsData) {
+	private Map<String, Integer> getAvgCallDurationByCC(List<Comms> commsData) {
 
 		Map<String, LinkedList<Integer>> countSumDuration = new HashMap<String, LinkedList<Integer>>();
 
@@ -220,7 +279,7 @@ public class MetricsService {
 		return avgCallDurationByCC;
 	}
 
-	public Map<String, Integer> getWordOccurrenceRanking(List<Comms> commsData) {
+	private Map<String, Integer> getWordOccurrenceRanking(List<Comms> commsData) {
 
 		Map<String, Integer> wordRanking = new HashMap<String, Integer>();
 
@@ -294,7 +353,7 @@ public class MetricsService {
 	public Set<String> getDestinCountryCodesSet() {
 		return destinCountryCodesSet;
 	}
-	
+
 	public Map<Integer, Long> getDurationOfJsonProcess() {
 		return durationJsonProcessesMap;
 	}

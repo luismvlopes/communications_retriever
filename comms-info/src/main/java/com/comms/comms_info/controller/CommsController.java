@@ -1,14 +1,11 @@
 package com.comms.comms_info.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.comms.comms_info.model.Comms;
 import com.comms.comms_info.model.Kpis;
 import com.comms.comms_info.model.Metrics;
 import com.comms.comms_info.service.LoadDataService;
@@ -24,54 +21,26 @@ public class CommsController {
 	@Autowired
 	private LoadDataService loadDataService;
 
-	private Long timeElapsed = null;
+//	private Long timeElapsed = null;
 
 	@GetMapping("/{date}")
 	public void loadCommsData(@PathVariable String date) {
 
-//		loadDataService.countInitialTime();
-
-		// Change destination to outside project
-		String destinAddress = "tempJson.json";
-
-		loadDataService.extractJsonFile(date, destinAddress);
-
-		loadDataService.modifyJsonFile(destinAddress);
-
-		loadDataService.setTempFileAddress(destinAddress);
-
-//		loadDataService.countFinishTime();
+		loadDataService.loadAndModifyJson(date);
 
 	}
 
 	@GetMapping("/metrics")
-	public Metrics returnMetricResults(/* @RequestBody List<Comms> commsData */) {
+	public Metrics returnMetricResults() {
 
-		List<Comms> commsData = loadDataService.accessDataFile();
-
-		Metrics metrics1 = new Metrics();
-
-		metrics1.setMissingFields(metricsService.getNumberRowsWithMissingFields(commsData));
-
-		metrics1.setBlankContentMessages(metricsService.getNumberOfMsgsWithBlankContent(commsData));
-
-		metrics1.setFieldErrors(metricsService.getNumberRowsWithFieldErrors(commsData));
-
-		metrics1.setCallsByCountry(metricsService.getNumberOfCallsByCC(commsData));
-
-		metrics1.setOkKoRelationship(metricsService.getRelationshipBetweenOKKOCalls(commsData));
-
-		metrics1.setAvgCallDurationByCountry(metricsService.getAvgCallDurationByCC(commsData));
-
-		metrics1.setWordHierarqchy(metricsService.getWordOccurrenceRanking(commsData));
-
-		return metrics1;
+		return metricsService.getMetrics();
 	}
 
 	@GetMapping("/kpis")
-
 	public Kpis returnKpis() {
 
+		
+		
 		Kpis kpis1 = new Kpis();
 
 		kpis1.setProcessedJSONFiles(loadDataService.getProcessedJsonFilesNumber());
