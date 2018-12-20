@@ -29,7 +29,6 @@ public class CommsController {
 	public void loadCommsData(@PathVariable String date) {
 
 		loadDataService.loadAndModifyJson(date);
-
 	}
 
 	@GetMapping("/metrics")
@@ -42,7 +41,6 @@ public class CommsController {
 	public Kpis returnKpis() {
 
 		return kpisService.getKpis();
-
 	}
 
 }

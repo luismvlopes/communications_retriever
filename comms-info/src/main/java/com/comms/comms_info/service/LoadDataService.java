@@ -7,24 +7,33 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
 @Service
 public class LoadDataService {
 
-	private int processedJsonFilesCounter = 0;
-	private int totalRowsRead = 0;
-//	private String tempFileAddress;
-
 	private String destinAddress = "tempJson.json";
 
+	private int processedJsonFilesCounter = 0;
+	private int totalRowsRead = 0;
+	private long timeElapsedLoading;
+
 	public void loadAndModifyJson(String date) {
+
+		Instant start = Instant.now();
 
 		extractJsonFile(date, destinAddress);
 
 		modifyJsonFile(destinAddress);
 
+		Instant finish = Instant.now();
+
+		timeElapsedLoading = Duration.between(start, finish).toMillis();
+		
+		System.out.println("Time elapsed loading file: " + timeElapsedLoading);
 	}
 
 	private void extractJsonFile(String date, String fileAddress) {
@@ -97,26 +106,8 @@ public class LoadDataService {
 		return totalRowsRead;
 	}
 
-//	Instant start = null;
-//	Instant finish = null;
-//	Long timeElapsed = Duration.between(start, finish).toMillis();
-//	Map<Integer, Long> durationJsonProcess = new HashMap<>();
-
-//	public void countInitialTime() {
-//		this.start = Instant.now();
-//	}
-//
-//	public void countFinishTime() {
-//		this.finish = Instant.now();
-//	}
-//
-//	public Map<Integer, Long> getDurationOfJsonProcess() {
-//		durationJsonProcess.put(processedJsonFilesCounter, timeElapsed);
-//		return durationJsonProcess;
-//	}
-
-//	public void setTempFileAddress(String tempFileAddress) {
-//		this.tempFileAddress = tempFileAddress;
-//	}
+	public long getTimeElapsedLoading() {
+		return timeElapsedLoading;
+	}
 
 }

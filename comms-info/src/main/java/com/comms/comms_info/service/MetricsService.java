@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -37,7 +39,11 @@ public class MetricsService {
 	private Set<String> destinCountryCodesSet = new HashSet<>();
 	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
 
+	private long timeElapsedMeasuring;
+
 	public Metrics getMetrics() {
+
+		Instant start = Instant.now();
 
 		Metrics metrics1 = new Metrics();
 
@@ -56,6 +62,12 @@ public class MetricsService {
 		metrics1.setAvgCallDurationByCountry(getAvgCallDurationByCC(commsData));
 
 		metrics1.setWordHierarqchy(getWordOccurrenceRanking(commsData));
+
+		Instant finish = Instant.now();
+
+		timeElapsedMeasuring = Duration.between(start, finish).toMillis();
+
+		System.out.println("Time elapsed measuring: " + timeElapsedMeasuring);
 
 		return metrics1;
 	}
@@ -333,8 +345,6 @@ public class MetricsService {
 			tempMap = reversedSortMap;
 		}
 
-		System.out.println("Sorted map by keys: " + tempMap);
-
 		return tempMap;
 	}
 
@@ -356,6 +366,10 @@ public class MetricsService {
 
 	public Map<Integer, Long> getDurationOfJsonProcess() {
 		return durationJsonProcessesMap;
+	}
+
+	public long getTimeElapsedMeasuring() {
+		return timeElapsedMeasuring;
 	}
 
 }
