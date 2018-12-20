@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.comms.comms_info.model.Kpis;
 import com.comms.comms_info.model.Metrics;
+import com.comms.comms_info.service.KpisService;
 import com.comms.comms_info.service.LoadDataService;
 import com.comms.comms_info.service.MetricsService;
 
@@ -21,7 +22,8 @@ public class CommsController {
 	@Autowired
 	private LoadDataService loadDataService;
 
-//	private Long timeElapsed = null;
+	@Autowired
+	private KpisService kpisService;
 
 	@GetMapping("/{date}")
 	public void loadCommsData(@PathVariable String date) {
@@ -39,25 +41,7 @@ public class CommsController {
 	@GetMapping("/kpis")
 	public Kpis returnKpis() {
 
-		
-		
-		Kpis kpis1 = new Kpis();
-
-		kpis1.setProcessedJSONFiles(loadDataService.getProcessedJsonFilesNumber());
-
-		kpis1.setTotalRows(loadDataService.getTotalRowsRead());
-
-		kpis1.setTotalCalls(metricsService.getCallsCounter());
-
-		kpis1.setTotalMessages(metricsService.getMessagesCounter());
-
-		kpis1.setTotalOriginCountryCodes(metricsService.getOriginCountryCodesSet().size());
-
-		kpis1.setTotalDestinationCountryCodes(metricsService.getDestinCountryCodesSet().size());
-
-//		kpis1.setDurationJSONProcess(loadDataService.getDurationOfJsonProcess());
-
-		return kpis1;
+		return kpisService.getKpis();
 
 	}
 
