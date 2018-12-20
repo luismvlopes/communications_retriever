@@ -13,20 +13,20 @@ Also processes the file to a JSON array and stores it locally.
 
 The service has a second HTTP endpoint ("/metrics") that returns a set of counters related with the processed JSON file:
 
-Number of rows with missing fields
-Number of messages with blank content
-Number of rows with fields errors
-Number of calls origin/destination grouped by country code 
-Relationship between OK/KO calls
-Average call duration grouped by country code 
-Word occurrence ranking for the given words in message_content field.
+- Number of rows with missing fields
+- Number of messages with blank content
+- Number of rows with fields errors
+- Number of calls origin/destination grouped by country code 
+- Relationship between OK/KO calls
+- Average call duration grouped by country code 
+- Word occurrence ranking for the given words in message_content field.
 
 
 The service has a third HTTP endpoint ("/kpis") that returns a set of counters related with the service:
 
-Total number of processed JSON files
-Total number of rows
-Total number of calls
-Total number of messages
-Total number of different origin country codes
-Total number of different destination country codes Duration of each JSON process
+- Total number of processed JSON files
+- Total number of rows
+- Total number of calls
+- Total number of messages
+- Total number of different origin country codes
+- Total number of different destination country codes Duration of each JSON process
