@@ -29,7 +29,7 @@ public class CommsController {
 	@GetMapping("/{date}")
 	public void loadCommsData(@PathVariable String date) {
 
-		loadDataService.countInitialTime();
+//		loadDataService.countInitialTime();
 
 		// Change destination to outside project
 		String destinAddress = "tempJson.json";
@@ -40,7 +40,7 @@ public class CommsController {
 
 		loadDataService.setTempFileAddress(destinAddress);
 
-		loadDataService.countFinishTime();
+//		loadDataService.countFinishTime();
 
 	}
 
@@ -86,7 +86,7 @@ public class CommsController {
 
 		kpis1.setTotalDestinationCountryCodes(metricsService.getDestinCountryCodesSet().size());
 
-		kpis1.setDurationJSONProcess(loadDataService.getDurationOfJsonProcess());
+//		kpis1.setDurationJSONProcess(loadDataService.getDurationOfJsonProcess());
 
 		return kpis1;
 
