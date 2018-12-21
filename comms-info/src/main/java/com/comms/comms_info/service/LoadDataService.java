@@ -73,7 +73,6 @@ public class LoadDataService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		this.processedJsonFilesCounter++;
 	}
 
 	private void modifyJsonFile(String fileAddress) {

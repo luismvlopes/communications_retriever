@@ -31,17 +31,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class MetricsService {
 
+	private List<Comms> commsData;
+	private List<Comms> referenceCommsData;
+
 	private String tempFileAddress = "tempJson.json";
 
-	private int processedJSONFilesNumber = 0;
+	private int processedJSONFilesNumber;
 	private int callsCounter = 0;
 	private int messagesCounter = 0;
-	private int totalCommsCounter = callsCounter + messagesCounter;
-
+	
 	private Set<String> originCountryCodesSet = new HashSet<>();
 	private Set<String> destinCountryCodesSet = new HashSet<>();
-	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
 
+	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
 	private long timeElapsedMeasuring;
 
 	public Metrics getMetrics() {
@@ -50,8 +52,8 @@ public class MetricsService {
 
 		Metrics metrics1 = new Metrics();
 
-		List<Comms> commsData = accessDataFile();
-
+		commsData = accessDataFile();
+		
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
 		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
@@ -63,10 +65,29 @@ public class MetricsService {
 		Instant finish = Instant.now();
 
 		timeElapsedMeasuring = Duration.between(start, finish).toMillis();
-
 		System.out.println("Time elapsed measuring: " + timeElapsedMeasuring);
 
+		updateProcessedJsonFilesNumber(commsData);
+		
 		return metrics1;
+	}
+
+	public void updateProcessedJsonFilesNumber(List<Comms> commsData) {
+
+		if (referenceCommsData == null) {
+			processedJSONFilesNumber = 1;
+			referenceCommsData = commsData;
+			return;
+		}
+		//TODO Improve more this comparing instruction...
+		if (referenceCommsData.size() == commsData.size()) {
+			System.out.println("processed Json file number should not update... Testing 'equals' method");
+			return;
+		}
+	
+		referenceCommsData = commsData;
+		processedJSONFilesNumber++;
+
 	}
 
 	private List<Comms> accessDataFile() {
@@ -345,9 +366,12 @@ public class MetricsService {
 		return tempMap;
 	}
 
+	public int getProcessedJsonFilesNumber() {
+		return processedJSONFilesNumber;
+	}
+
 	public Map<Integer, Long> recordDurationEachJSONProcess() {
-		
-		
+
 		return durationJsonProcessesMap;
 	}
 
@@ -359,9 +383,9 @@ public class MetricsService {
 		return messagesCounter;
 	}
 
-	public int getTotalRowsCounter() {
-		return totalCommsCounter;
-	}
+//	public int getTotalRowsCounter() {
+//		return callsCounter + messagesCounter;
+//	}
 
 	public Set<String> getOriginCountryCodesSet() {
 		return originCountryCodesSet;
@@ -378,9 +402,9 @@ public class MetricsService {
 	public long getTimeElapsedMeasuring() {
 		return timeElapsedMeasuring;
 	}
-
-	public int getProcessedJsonFilesNumber() {
-		return processedJSONFilesNumber;
+	
+	public List<Comms> getCommsData() {
+		return commsData;
 	}
 
 }
