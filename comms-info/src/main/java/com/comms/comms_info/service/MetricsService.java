@@ -37,9 +37,10 @@ public class MetricsService {
 	private String tempFileAddress = "tempJson.json";
 
 	private int processedJSONFilesNumber;
+	private int totalRowsCounter = 0;
 	private int callsCounter = 0;
 	private int messagesCounter = 0;
-	
+
 	private Set<String> originCountryCodesSet = new HashSet<>();
 	private Set<String> destinCountryCodesSet = new HashSet<>();
 
@@ -53,7 +54,8 @@ public class MetricsService {
 		Metrics metrics1 = new Metrics();
 
 		commsData = accessDataFile();
-		
+		addRowsToCounter();
+
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
 		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
@@ -68,7 +70,7 @@ public class MetricsService {
 		System.out.println("Time elapsed measuring: " + timeElapsedMeasuring);
 
 		updateProcessedJsonFilesNumber(commsData);
-		
+
 		return metrics1;
 	}
 
@@ -79,12 +81,12 @@ public class MetricsService {
 			referenceCommsData = commsData;
 			return;
 		}
-		//TODO Improve more this comparing instruction...
+		// TODO Improve more this comparing instruction...
 		if (referenceCommsData.size() == commsData.size()) {
 			System.out.println("processed Json file number should not update... Testing 'equals' method");
 			return;
 		}
-	
+
 		referenceCommsData = commsData;
 		processedJSONFilesNumber++;
 
@@ -119,11 +121,15 @@ public class MetricsService {
 	private int getNumberRowsWithMissingFields(List<Comms> commsData) {
 
 		int rowsWithMissingFields = 0;
-
+		int msgCounter = 0;
+		int callCounter = 0;
+		
 		for (Comms communication : commsData) {
 
 			if (communication instanceof Call) {
-
+					callCounter++;
+					System.out.println("This is a call! It's number " + callCounter);
+					
 				this.callsCounter++;
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
@@ -134,7 +140,12 @@ public class MetricsService {
 			}
 
 			if (communication instanceof Msg) {
-
+				//Mapping not working properly...
+				//TODO correct the mapping
+				
+					msgCounter++;
+				System.out.println("This is a message! It's number " + msgCounter);
+				
 				this.messagesCounter++;
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
@@ -370,8 +381,11 @@ public class MetricsService {
 		return processedJSONFilesNumber;
 	}
 
-	public Map<Integer, Long> recordDurationEachJSONProcess() {
+	private void addRowsToCounter() {
+		this.totalRowsCounter += getCommsData().size();
+	}
 
+	public Map<Integer, Long> recordDurationEachJSONProcess() {
 		return durationJsonProcessesMap;
 	}
 
@@ -382,10 +396,6 @@ public class MetricsService {
 	public int getMessagesCounter() {
 		return messagesCounter;
 	}
-
-//	public int getTotalRowsCounter() {
-//		return callsCounter + messagesCounter;
-//	}
 
 	public Set<String> getOriginCountryCodesSet() {
 		return originCountryCodesSet;
@@ -402,9 +412,13 @@ public class MetricsService {
 	public long getTimeElapsedMeasuring() {
 		return timeElapsedMeasuring;
 	}
-	
+
 	public List<Comms> getCommsData() {
 		return commsData;
+	}
+
+	public int getTotalRowsCounter() {
+		return totalRowsCounter;
 	}
 
 }
