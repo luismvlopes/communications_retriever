@@ -33,8 +33,11 @@ public class MetricsService {
 
 	private String tempFileAddress = "tempJson.json";
 
+	private int processedJSONFilesNumber = 0;
 	private int callsCounter = 0;
 	private int messagesCounter = 0;
+	private int totalCommsCounter = callsCounter + messagesCounter;
+
 	private Set<String> originCountryCodesSet = new HashSet<>();
 	private Set<String> destinCountryCodesSet = new HashSet<>();
 	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
@@ -50,17 +53,11 @@ public class MetricsService {
 		List<Comms> commsData = accessDataFile();
 
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
-
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
-
 		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
-
 		metrics1.setCallsByCountry(getNumberOfCallsByCC(commsData));
-
 		metrics1.setOkKoRelationship(getRelationshipBetweenOKKOCalls(commsData));
-
 		metrics1.setAvgCallDurationByCountry(getAvgCallDurationByCC(commsData));
-
 		metrics1.setWordHierarqchy(getWordOccurrenceRanking(commsData));
 
 		Instant finish = Instant.now();
@@ -348,12 +345,22 @@ public class MetricsService {
 		return tempMap;
 	}
 
+	public Map<Integer, Long> recordDurationEachJSONProcess() {
+		
+		
+		return durationJsonProcessesMap;
+	}
+
 	public int getCallsCounter() {
 		return callsCounter;
 	}
 
 	public int getMessagesCounter() {
 		return messagesCounter;
+	}
+
+	public int getTotalRowsCounter() {
+		return totalCommsCounter;
 	}
 
 	public Set<String> getOriginCountryCodesSet() {
@@ -370,6 +377,10 @@ public class MetricsService {
 
 	public long getTimeElapsedMeasuring() {
 		return timeElapsedMeasuring;
+	}
+
+	public int getProcessedJsonFilesNumber() {
+		return processedJSONFilesNumber;
 	}
 
 }

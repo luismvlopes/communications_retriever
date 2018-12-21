@@ -21,35 +21,32 @@ public class KpisService {
 
 		Kpis kpis1 = new Kpis();
 
-		kpis1.setProcessedJSONFiles(loadDataService.getProcessedJsonFilesNumber());
-
-		kpis1.setTotalRows(loadDataService.getTotalRowsRead());
-		
+		kpis1.setProcessedJSONFiles(getProcessedJSONFilesNumber());
+		kpis1.setTotalRows(metricsService.getTotalRowsCounter());
 		kpis1.setTotalCalls(metricsService.getCallsCounter());
-		
 		kpis1.setTotalMessages(metricsService.getMessagesCounter());
-		
 		kpis1.setTotalOriginCountryCodes(metricsService.getOriginCountryCodesSet().size());
-		
 		kpis1.setTotalDestinationCountryCodes(metricsService.getDestinCountryCodesSet().size());
-		
 		kpis1.setDurationJSONProcess(getDurationJSONProcesses());
-		
+
 		return kpis1;
 
 	}
 	
-	private Map<Integer, Long> getDurationJSONProcesses() {
-				
-		Map<Integer, Long> processesAndDurations = new HashMap<Integer, Long>();
+	private int getProcessedJSONFilesNumber() {
 		
+		loadDataService.getProcessedJSONFilesNumber();
 		
-		loadDataService.getTimeElapsedLoading();
+		metricsService.getProcessedJsonFilesNumber();
 		
-		
-		return processesAndDurations;
+		return 0;
 	}
 
+	private Map<Integer, Long> getDurationJSONProcesses() {
 
+		Map<Integer, Long> processesAndDurations = new HashMap<Integer, Long>();
+
+			return processesAndDurations;
+	}
 
 }

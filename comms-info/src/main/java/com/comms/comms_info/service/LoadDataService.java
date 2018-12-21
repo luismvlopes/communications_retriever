@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -17,23 +19,27 @@ public class LoadDataService {
 
 	private String destinAddress = "tempJson.json";
 
-	private int processedJsonFilesCounter = 0;
-	private int totalRowsRead = 0;
+	private int processedJSONFilesCounter = 0;
+//	private int totalRowsRead = 0;
 	private long timeElapsedLoading;
+	
+	private Map<Integer, Long> processesAndDurations = new HashMap<Integer, Long>();
+	
 
 	public void loadAndModifyJson(String date) {
 
 		Instant start = Instant.now();
 
 		extractJsonFile(date, destinAddress);
-
 		modifyJsonFile(destinAddress);
 
 		Instant finish = Instant.now();
 
 		timeElapsedLoading = Duration.between(start, finish).toMillis();
-		
+
 		System.out.println("Time elapsed loading file: " + timeElapsedLoading);
+		
+		//Adicionar ao mapa a duração do processo mais o número atual do Json...
 	}
 
 	private void extractJsonFile(String date, String fileAddress) {
@@ -53,7 +59,9 @@ public class LoadDataService {
 
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
-				this.totalRowsRead++;
+				//Put this counter in the Metrics service...
+				
+//				this.totalRowsRead++;
 
 				writer.write(inputLine);
 			}
@@ -65,7 +73,7 @@ public class LoadDataService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.processedJsonFilesCounter++;
+//		this.processedJsonFilesCounter++;
 	}
 
 	private void modifyJsonFile(String fileAddress) {
@@ -98,13 +106,13 @@ public class LoadDataService {
 		}
 	}
 
-	public int getProcessedJsonFilesNumber() {
-		return processedJsonFilesCounter;
+	public int getProcessedJSONFilesNumber() {
+		return processedJSONFilesCounter;
 	}
 
-	public int getTotalRowsRead() {
-		return totalRowsRead;
-	}
+//	public int getTotalRowsRead() {
+//		return totalRowsRead;
+//	}
 
 	public long getTimeElapsedLoading() {
 		return timeElapsedLoading;
