@@ -1,11 +1,15 @@
 package com.comms.comms_info.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.comms.comms_info.model.Comms;
 import com.comms.comms_info.model.Kpis;
 import com.comms.comms_info.model.Metrics;
 import com.comms.comms_info.service.KpisService;
@@ -32,9 +36,9 @@ public class CommsController {
 	}
 
 	@GetMapping("/metrics")
-	public Metrics returnMetricResults() {
+	public Metrics returnMetricResults(@RequestBody List<Comms> commsData) {
 
-		return metricsService.getMetrics();
+		return metricsService.getMetrics(commsData);
 	}
 
 	@GetMapping("/kpis")

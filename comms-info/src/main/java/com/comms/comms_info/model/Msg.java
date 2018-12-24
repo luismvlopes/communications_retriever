@@ -10,10 +10,6 @@ public class Msg extends Comms {
 	public Msg() {
 	};
 
-	public Msg(Comms comms) {
-		// TODO Auto-generated constructor stub
-	}
-
 	@JsonProperty("message_content")
 	public String getMessageContent() {
 		return messageContent;

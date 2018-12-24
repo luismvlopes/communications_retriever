@@ -47,15 +47,16 @@ public class MetricsService {
 	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
 	private long timeElapsedMeasuring;
 
-	public Metrics getMetrics() {
+	public Metrics getMetrics(List<Comms> commsData) {
 
 		Instant start = Instant.now();
 
 		Metrics metrics1 = new Metrics();
 
-		commsData = accessDataFile();
-		addRowsToCounter();
-
+		
+		System.out.println(commsData);
+		//commsData = accessDataFile();
+		
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
 		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
@@ -79,6 +80,7 @@ public class MetricsService {
 		if (referenceCommsData == null) {
 			processedJSONFilesNumber = 1;
 			referenceCommsData = commsData;
+			addRowsToCounter(commsData);
 			return;
 		}
 		// TODO Improve more this comparing instruction...
@@ -89,6 +91,7 @@ public class MetricsService {
 
 		referenceCommsData = commsData;
 		processedJSONFilesNumber++;
+		addRowsToCounter(commsData);
 
 	}
 
@@ -381,8 +384,8 @@ public class MetricsService {
 		return processedJSONFilesNumber;
 	}
 
-	private void addRowsToCounter() {
-		this.totalRowsCounter += getCommsData().size();
+	private void addRowsToCounter(List<Comms> commsData) {
+		this.totalRowsCounter += commsData.size();
 	}
 
 	public Map<Integer, Long> recordDurationEachJSONProcess() {
