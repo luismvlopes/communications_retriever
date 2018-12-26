@@ -57,10 +57,10 @@ public class MetricsService {
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
 		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
-//		metrics1.setCallsByCountry(getNumberOfCallsByCC(commsData));
-//		metrics1.setOkKoRelationship(getRelationshipBetweenOKKOCalls(commsData));
-//		metrics1.setAvgCallDurationByCountry(getAvgCallDurationByCC(commsData));
-//		metrics1.setWordHierarqchy(getWordOccurrenceRanking(commsData));
+		metrics1.setCallsByCountry(getNumberOfCallsByCC(commsData));
+		metrics1.setOkKoRelationship(getRelationshipBetweenOKKOCalls(commsData));
+		metrics1.setAvgCallDurationByCountry(getAvgCallDurationByCC(commsData));
+		metrics1.setWordHierarqchy(getWordOccurrenceRanking(commsData));
 
 		Instant finish = Instant.now();
 
@@ -72,6 +72,7 @@ public class MetricsService {
 		return metrics1;
 	}
 
+	//Method used in Kpis...
 	public void updateProcessedJsonFilesNumber(List<Comms> commsData) {
 
 		if (referenceCommsData == null) {
@@ -174,19 +175,25 @@ public class MetricsService {
 			}
 		}
 
-		System.out.println("Messages with blank content: " + messagesWithBlackContent);
 		return messagesWithBlackContent;
 	}
 
 	private int getNumberRowsWithFieldErrors(List<Comms> commsData) {
 
+		/**
+		 * Field errors are considered: Type of message different from CALL or MSG
+		 * Message Type: OK or KO Message Status: DELIVERED or SEEN
+		 */
+
 		int rowsWithFieldErrors = 0;
 
 		for (Comms communication : commsData) {
 
-			
-			
-			
+			if (!communication.getMessageType().equals("CALL") && !communication.getMessageType().equals("MSG")) {
+				rowsWithFieldErrors++;
+				continue;
+			}
+
 			if (communication instanceof Call) {
 
 				if (!((Call) communication).getStatusCode().equals("OK")
@@ -205,7 +212,6 @@ public class MetricsService {
 		}
 
 		return rowsWithFieldErrors;
-
 	}
 
 	private Map<String, Integer> getNumberOfCallsByCC(List<Comms> commsData) {
@@ -222,10 +228,10 @@ public class MetricsService {
 					continue;
 				}
 
-				String originCC = call1.getOrigin().toString().substring(0, 2);
+				String originCC = call1.getOrigin().toString().substring(0, 3);
 				originCountryCodesSet.add(originCC);
 
-				String destinCC = call1.getDestination().toString().substring(0, 2);
+				String destinCC = call1.getDestination().toString().substring(0, 3);
 				destinCountryCodesSet.add(destinCC);
 
 				String originDestinCall = "Orig: " + originCC + ", Dest: " + destinCC;
@@ -287,7 +293,7 @@ public class MetricsService {
 					continue;
 				}
 
-				String countryCode = communication.getOrigin().toString().substring(0, 2);
+				String countryCode = communication.getOrigin().toString().substring(0, 3);
 
 				if (countSumDuration.containsKey(countryCode)) {
 
