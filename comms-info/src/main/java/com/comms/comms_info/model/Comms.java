@@ -5,9 +5,16 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "message_type", defaultImpl = Void.class)
-@JsonSubTypes({ @Type(value = Call.class, name = "CALL"), @Type(value = Msg.class, name = "MSG") })
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME, 
+		include = JsonTypeInfo.As.PROPERTY, 
+		property = "message_type",
+		visible = true,
+		defaultImpl = Void.class)
+@JsonSubTypes({ 
+	@Type(value = Call.class, name = "CALL"), 
+	@Type(value = Msg.class, name = "MSG")
+	})
 public abstract class Comms {
 
 	private String messageType;
@@ -18,12 +25,19 @@ public abstract class Comms {
 	public Comms() {
 	};
 
+	public Comms(String messageType, Long timestamp, Long origin, Long destination) {
+		this.messageType = messageType;
+		this.timestamp = timestamp;
+		this.origin = origin;
+		this.destination = destination;
+	}
+
 	@JsonProperty("message_type")
 	public String getMessageType() {
 		return messageType;
 	}
 
-	// @JsonProperty("message_type")
+	@JsonProperty("message_type")
 	public void setMessageType(String messageType) {
 		this.messageType = messageType;
 	}
@@ -33,7 +47,7 @@ public abstract class Comms {
 		return timestamp;
 	}
 
-	// @JsonProperty("timestamp")
+	@JsonProperty("timestamp")
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
@@ -43,7 +57,7 @@ public abstract class Comms {
 		return origin;
 	}
 
-	// @JsonProperty("origin")
+	@JsonProperty("origin")
 	public void setOrigin(Long origin) {
 		this.origin = origin;
 	}
@@ -53,7 +67,7 @@ public abstract class Comms {
 		return destination;
 	}
 
-	// @JsonProperty("destination")
+	@JsonProperty("destination")
 	public void setDestination(Long destination) {
 		this.destination = destination;
 	}

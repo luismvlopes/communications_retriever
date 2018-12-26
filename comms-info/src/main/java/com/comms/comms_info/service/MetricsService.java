@@ -50,27 +50,24 @@ public class MetricsService {
 	public Metrics getMetrics(List<Comms> commsData) {
 
 		Instant start = Instant.now();
-
 		Metrics metrics1 = new Metrics();
 
-		
-		System.out.println(commsData);
-		//commsData = accessDataFile();
-		
+		// commsData = accessDataFile();
+
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
 		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
-		metrics1.setCallsByCountry(getNumberOfCallsByCC(commsData));
-		metrics1.setOkKoRelationship(getRelationshipBetweenOKKOCalls(commsData));
-		metrics1.setAvgCallDurationByCountry(getAvgCallDurationByCC(commsData));
-		metrics1.setWordHierarqchy(getWordOccurrenceRanking(commsData));
+//		metrics1.setCallsByCountry(getNumberOfCallsByCC(commsData));
+//		metrics1.setOkKoRelationship(getRelationshipBetweenOKKOCalls(commsData));
+//		metrics1.setAvgCallDurationByCountry(getAvgCallDurationByCC(commsData));
+//		metrics1.setWordHierarqchy(getWordOccurrenceRanking(commsData));
 
 		Instant finish = Instant.now();
 
 		timeElapsedMeasuring = Duration.between(start, finish).toMillis();
 		System.out.println("Time elapsed measuring: " + timeElapsedMeasuring);
 
-		updateProcessedJsonFilesNumber(commsData);
+//		updateProcessedJsonFilesNumber(commsData);
 
 		return metrics1;
 	}
@@ -126,14 +123,19 @@ public class MetricsService {
 		int rowsWithMissingFields = 0;
 		int msgCounter = 0;
 		int callCounter = 0;
-		
+		int numberComms = 0;
+
 		for (Comms communication : commsData) {
 
+			numberComms++;
+
+			System.out.println("Communication type: " + communication.getMessageType());
+
 			if (communication instanceof Call) {
-					callCounter++;
-					System.out.println("This is a call! It's number " + callCounter);
-					
+
+				// Create method for counting Calls
 				this.callsCounter++;
+
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
 						|| ((Call) communication).getDuration() == null || ((Call) communication).getStatusCode() == ""
@@ -143,19 +145,15 @@ public class MetricsService {
 			}
 
 			if (communication instanceof Msg) {
-				//Mapping not working properly...
-				//TODO correct the mapping
-				
-					msgCounter++;
-				System.out.println("This is a message! It's number " + msgCounter);
-				
+
+				msgCounter++;
+
 				this.messagesCounter++;
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
 						|| ((Msg) communication).getMessageContent() == ""
 						|| ((Msg) communication).getMessageStatus() == "") {
 					rowsWithMissingFields++;
-					break;
 				}
 			}
 		}
@@ -175,6 +173,8 @@ public class MetricsService {
 				}
 			}
 		}
+
+		System.out.println("Messages with blank content: " + messagesWithBlackContent);
 		return messagesWithBlackContent;
 	}
 
@@ -184,6 +184,9 @@ public class MetricsService {
 
 		for (Comms communication : commsData) {
 
+			
+			
+			
 			if (communication instanceof Call) {
 
 				if (!((Call) communication).getStatusCode().equals("OK")
