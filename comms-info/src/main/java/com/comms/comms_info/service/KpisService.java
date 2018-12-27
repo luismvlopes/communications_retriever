@@ -24,9 +24,9 @@ public class KpisService {
 		kpis1.setTotalRows(metricsService.getTotalRows());
 		kpis1.setTotalCalls(metricsService.getTotalCalls());
 		kpis1.setTotalMessages(metricsService.getTotalMsgs());
-//		kpis1.setTotalOriginCountryCodes(metricsService.getOriginCountryCodesSet().size());
-//		kpis1.setTotalDestinationCountryCodes(metricsService.getDestinCountryCodesSet().size());
-//		kpis1.setDurationJSONProcess(getDurationJSONProcesses());
+		kpis1.setTotalOriginCountryCodes(metricsService.getDifferentOriginCC());
+		kpis1.setTotalDestinationCountryCodes(metricsService.getDifferentDestinationCC());
+		kpis1.setDurationJSONProcess(getDurationJSONProcesses());
 
 		return kpis1;
 	}

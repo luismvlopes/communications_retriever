@@ -41,9 +41,8 @@ public class MetricsService {
 	private int totalRows = 0;
 	private int totalCalls = 0;
 	private int totalMsgs = 0;
-
-	private Set<String> originCountryCodesSet = new HashSet<>();
-	private Set<String> destinCountryCodesSet = new HashSet<>();
+	private int differentOriginCC = 0;
+	private int differentDestinationCC = 0;
 
 	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
 	private long timeElapsedMeasuring;
@@ -95,7 +94,6 @@ public class MetricsService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return commsData;
 	}
 
@@ -200,10 +198,8 @@ public class MetricsService {
 				}
 
 				String originCC = call1.getOrigin().toString().substring(0, 3);
-				originCountryCodesSet.add(originCC);
 
 				String destinCC = call1.getDestination().toString().substring(0, 3);
-				destinCountryCodesSet.add(destinCC);
 
 				String originDestinCall = "Orig: " + originCC + ", Dest: " + destinCC;
 
@@ -395,6 +391,11 @@ public class MetricsService {
 		int rowsCounter = 0;
 		int callsCounter = 0;
 		int msgsCounter = 0;
+		int originCCCounter = 0;
+		int destinationCCCounter = 0;
+
+		Set<String> originCountryCodesSet = new HashSet<>();
+		Set<String> destinCountryCodesSet = new HashSet<>();
 
 		for (int i = 0; i < jsonDataFiles.size(); i++) {
 			rowsCounter += jsonDataFiles.get(i).size();
@@ -407,12 +408,22 @@ public class MetricsService {
 				if (jsonDataFiles.get(i).get(j).getMessageType().equals("CALL")) {
 					callsCounter++;
 				}
+
+				if (jsonDataFiles.get(i).get(j).getOrigin() == null
+						|| jsonDataFiles.get(i).get(j).getDestination() == null) {
+					continue;
+				}
+
+				originCountryCodesSet.add(jsonDataFiles.get(i).get(j).getOrigin().toString().substring(0, 3));
+				destinCountryCodesSet.add(jsonDataFiles.get(i).get(j).getDestination().toString().substring(0, 3));
 			}
 		}
 
 		this.totalRows = rowsCounter;
 		this.totalCalls = callsCounter;
 		this.totalMsgs = msgsCounter;
+		this.differentOriginCC = originCountryCodesSet.size();
+		this.differentDestinationCC = destinCountryCodesSet.size();
 
 	}
 
@@ -440,12 +451,12 @@ public class MetricsService {
 		return totalMsgs;
 	}
 
-	public Set<String> getOriginCountryCodesSet() {
-		return originCountryCodesSet;
+	public int getDifferentOriginCC() {
+		return differentOriginCC;
 	}
 
-	public Set<String> getDestinCountryCodesSet() {
-		return destinCountryCodesSet;
+	public int getDifferentDestinationCC() {
+		return differentDestinationCC;
 	}
 
 	public Map<Integer, Long> getDurationOfJsonProcess() {
