@@ -1,8 +1,5 @@
 package com.comms.comms_info.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +23,8 @@ public class KpisService {
 		kpis1.setTotalMessages(metricsService.getTotalMsgs());
 		kpis1.setTotalOriginCountryCodes(metricsService.getDifferentOriginCC());
 		kpis1.setTotalDestinationCountryCodes(metricsService.getDifferentDestinationCC());
-		kpis1.setDurationJSONProcess(getDurationJSONProcesses());
+		kpis1.setDurationJSONProcess(metricsService.calcDurationOfJsonProcess());
 
 		return kpis1;
 	}
-
-	private Map<Integer, Long> getDurationJSONProcesses() {
-
-		Map<Integer, Long> processesAndDurations = new HashMap<Integer, Long>();
-
-		return processesAndDurations;
-	}
-
 }
