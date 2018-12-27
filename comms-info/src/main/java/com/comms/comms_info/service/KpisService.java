@@ -18,13 +18,15 @@ public class KpisService {
 
 		Kpis kpis1 = new Kpis();
 
+		metricsService.calcTotalValues();
+
 		kpis1.setProcessedJSONFiles(metricsService.getProcessedJsonFilesNumber());
-		kpis1.setTotalRows(metricsService.getTotalRowsCounter());
-		kpis1.setTotalCalls(metricsService.getCallsCounter());
-		kpis1.setTotalMessages(metricsService.getMessagesCounter());
-		kpis1.setTotalOriginCountryCodes(metricsService.getOriginCountryCodesSet().size());
-		kpis1.setTotalDestinationCountryCodes(metricsService.getDestinCountryCodesSet().size());
-		kpis1.setDurationJSONProcess(getDurationJSONProcesses());
+		kpis1.setTotalRows(metricsService.getTotalRows());
+		kpis1.setTotalCalls(metricsService.getTotalCalls());
+		kpis1.setTotalMessages(metricsService.getTotalMsgs());
+//		kpis1.setTotalOriginCountryCodes(metricsService.getOriginCountryCodesSet().size());
+//		kpis1.setTotalDestinationCountryCodes(metricsService.getDestinCountryCodesSet().size());
+//		kpis1.setDurationJSONProcess(getDurationJSONProcesses());
 
 		return kpis1;
 	}

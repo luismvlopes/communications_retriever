@@ -38,9 +38,9 @@ public class MetricsService {
 	private String tempFileAddress = "tempJson.json";
 
 	private int processedJSONFilesCounter = 0;
-	private int totalRowsCounter = 0;
-	private int callsCounter = 0;
-	private int messagesCounter = 0;
+	private int totalRows = 0;
+	private int totalCalls = 0;
+	private int totalMsgs = 0;
 
 	private Set<String> originCountryCodesSet = new HashSet<>();
 	private Set<String> destinCountryCodesSet = new HashSet<>();
@@ -71,41 +71,6 @@ public class MetricsService {
 		updateProcessedJsonFilesCounter(commsData);
 
 		return metrics1;
-	}
-
-	public void updateProcessedJsonFilesCounter(List<Comms> commsData) {
-
-		if (jsonDataFiles.isEmpty()) {
-			jsonDataFiles.add(commsData);
-			processedJSONFilesCounter = jsonDataFiles.size();
-			return;
-		}
-
-		for (int i = 0; i < jsonDataFiles.size(); i++) {
-			if (commsData.size() == jsonDataFiles.get(i).size()) {
-
-				System.out.println("The files have the same size...");
-				for (int j = 0; j < commsData.size(); j++) {
-
-					if (commsData.get(j).getTimestamp() == null || jsonDataFiles.get(i).get(j).getTimestamp() == null) {
-						continue;
-					}
-
-					if (!commsData.get(j).getTimestamp().equals(jsonDataFiles.get(i).get(j).getTimestamp())) {
-						System.out.println("It's a new file!!! Add it to the List!");
-						jsonDataFiles.add(commsData);
-						System.out.println("Size of the files list: " + jsonDataFiles.size());
-						return;
-					}
-				}
-				System.out.println("File already checked!");
-				return;
-			}
-		}
-
-		jsonDataFiles.add(commsData);
-		processedJSONFilesCounter = jsonDataFiles.size();
-
 	}
 
 	private List<Comms> accessDataFile() {
@@ -147,9 +112,6 @@ public class MetricsService {
 
 			if (communication instanceof Call) {
 
-				// Create method for counting Calls
-				this.callsCounter++;
-
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
 						|| ((Call) communication).getDuration() == null || ((Call) communication).getStatusCode() == ""
@@ -160,9 +122,6 @@ public class MetricsService {
 
 			if (communication instanceof Msg) {
 
-				msgCounter++;
-
-				this.messagesCounter++;
 				if (communication.getMessageType() == "" || communication.getTimestamp() == null
 						|| communication.getOrigin() == null || communication.getDestination() == null
 						|| ((Msg) communication).getMessageContent() == ""
@@ -191,12 +150,11 @@ public class MetricsService {
 		return messagesWithBlackContent;
 	}
 
+	/**
+	 * Field errors are considered: Type of message different from CALL or MSG
+	 * Message Type: OK or KO Message Status: DELIVERED or SEEN
+	 */
 	private int getNumberRowsWithFieldErrors(List<Comms> commsData) {
-
-		/**
-		 * Field errors are considered: Type of message different from CALL or MSG
-		 * Message Type: OK or KO Message Status: DELIVERED or SEEN
-		 */
 
 		int rowsWithFieldErrors = 0;
 
@@ -402,24 +360,84 @@ public class MetricsService {
 		return tempMap;
 	}
 
+	public void updateProcessedJsonFilesCounter(List<Comms> commsData) {
+
+		if (jsonDataFiles.isEmpty()) {
+			jsonDataFiles.add(commsData);
+			processedJSONFilesCounter = jsonDataFiles.size();
+			return;
+		}
+
+		for (int i = 0; i < jsonDataFiles.size(); i++) {
+			if (commsData.size() == jsonDataFiles.get(i).size()) {
+
+				for (int j = 0; j < commsData.size(); j++) {
+
+					if (commsData.get(j).getTimestamp() == null || jsonDataFiles.get(i).get(j).getTimestamp() == null) {
+						continue;
+					}
+
+					if (!commsData.get(j).getTimestamp().equals(jsonDataFiles.get(i).get(j).getTimestamp())) {
+						jsonDataFiles.add(commsData);
+						return;
+					}
+				}
+				return;
+			}
+		}
+
+		jsonDataFiles.add(commsData);
+		processedJSONFilesCounter = jsonDataFiles.size();
+	}
+
+	public void calcTotalValues() {
+
+		int rowsCounter = 0;
+		int callsCounter = 0;
+		int msgsCounter = 0;
+
+		for (int i = 0; i < jsonDataFiles.size(); i++) {
+			rowsCounter += jsonDataFiles.get(i).size();
+
+			for (int j = 0; j < jsonDataFiles.get(i).size(); j++) {
+				if (jsonDataFiles.get(i).get(j).getMessageType().equals("MSG")) {
+					msgsCounter++;
+				}
+
+				if (jsonDataFiles.get(i).get(j).getMessageType().equals("CALL")) {
+					callsCounter++;
+				}
+			}
+		}
+
+		this.totalRows = rowsCounter;
+		this.totalCalls = callsCounter;
+		this.totalMsgs = msgsCounter;
+
+	}
+
 	public int getProcessedJsonFilesNumber() {
 		return processedJSONFilesCounter;
 	}
 
-	private void addRowsToCounter(List<Comms> commsData) {
-		this.totalRowsCounter += commsData.size();
+	public List<List<Comms>> getJsonDataFiles() {
+		return jsonDataFiles;
 	}
 
 	public Map<Integer, Long> recordDurationEachJSONProcess() {
 		return durationJsonProcessesMap;
 	}
 
-	public int getCallsCounter() {
-		return callsCounter;
+	public int getTotalRows() {
+		return totalRows;
 	}
 
-	public int getMessagesCounter() {
-		return messagesCounter;
+	public int getTotalCalls() {
+		return totalCalls;
+	}
+
+	public int getTotalMsgs() {
+		return totalMsgs;
 	}
 
 	public Set<String> getOriginCountryCodesSet() {
@@ -440,10 +458,6 @@ public class MetricsService {
 
 	public List<Comms> getCommsData() {
 		return commsData;
-	}
-
-	public int getTotalRowsCounter() {
-		return totalRowsCounter;
 	}
 
 }
