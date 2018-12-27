@@ -30,3 +30,4 @@ The service has a third HTTP endpoint ("/kpis") that returns a set of counters r
 - Total number of messages
 - Total number of different origin country codes
 - Total number of different destination country codes Duration of each JSON process
+- Duration of each JSON process
