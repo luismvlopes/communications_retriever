@@ -50,11 +50,11 @@ public class MetricsService {
 	public Metrics getMetrics() {
 
 		Instant start = Instant.now();
-		
+
 		Metrics metrics1 = new Metrics();
-		
+
 		commsData = accessDataFile();
-	
+
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
 		metrics1.setFieldErrors(getNumberRowsWithFieldErrors(commsData));
@@ -148,7 +148,6 @@ public class MetricsService {
 
 		return messagesWithBlackContent;
 	}
-
 
 	private int getNumberRowsWithFieldErrors(List<Comms> commsData) {
 
@@ -424,26 +423,22 @@ public class MetricsService {
 		this.differentDestinationCC = destinCountryCodesSet.size();
 
 	}
-	
-	
-	
-	
+
 	public Map<Integer, Long> calcDurationOfJsonProcess() {
-		
-		if(processedJSONFilesCounter == 0) {
+
+		if (processedJSONFilesCounter == 0) {
 			return null;
 		}
-		
-		if(processesAndDurations.containsKey(processedJSONFilesCounter)) {
+
+		if (processesAndDurations.containsKey(processedJSONFilesCounter)) {
 			return processesAndDurations;
 		}
-				
+
 		processesAndDurations.put(processedJSONFilesCounter, timeElapsedMeasuring);
-				
+
 		return processesAndDurations;
 	}
 
-	
 	public int getProcessedJsonFilesNumber() {
 		return processedJSONFilesCounter;
 	}
