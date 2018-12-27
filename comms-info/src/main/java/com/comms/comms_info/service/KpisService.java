@@ -12,12 +12,8 @@ import com.comms.comms_info.model.Kpis;
 public class KpisService {
 
 	@Autowired
-	private LoadDataService loadDataService;
-
-	@Autowired
 	private MetricsService metricsService;
 
-	
 	public Kpis getKpis() {
 
 		Kpis kpis1 = new Kpis();
@@ -32,16 +28,12 @@ public class KpisService {
 
 		return kpis1;
 	}
-	
-	
 
 	private Map<Integer, Long> getDurationJSONProcesses() {
 
 		Map<Integer, Long> processesAndDurations = new HashMap<Integer, Long>();
 
-			return processesAndDurations;
+		return processesAndDurations;
 	}
-	
-	
 
 }

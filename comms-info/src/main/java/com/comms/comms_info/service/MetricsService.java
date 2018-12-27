@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,11 +33,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MetricsService {
 
 	private List<Comms> commsData;
-	private List<Comms> referenceCommsData;
+	private List<List<Comms>> jsonDataFiles = new ArrayList<List<Comms>>();
 
 	private String tempFileAddress = "tempJson.json";
 
-	private int processedJSONFilesNumber;
+	private int processedJSONFilesCounter = 0;
 	private int totalRowsCounter = 0;
 	private int callsCounter = 0;
 	private int messagesCounter = 0;
@@ -47,12 +48,12 @@ public class MetricsService {
 	private Map<Integer, Long> durationJsonProcessesMap = new HashMap<>();
 	private long timeElapsedMeasuring;
 
-	public Metrics getMetrics(List<Comms> commsData) {
+	public Metrics getMetrics() {
 
 		Instant start = Instant.now();
 		Metrics metrics1 = new Metrics();
 
-		// commsData = accessDataFile();
+		commsData = accessDataFile();
 
 		metrics1.setMissingFields(getNumberRowsWithMissingFields(commsData));
 		metrics1.setBlankContentMessages(getNumberOfMsgsWithBlankContent(commsData));
@@ -67,29 +68,43 @@ public class MetricsService {
 		timeElapsedMeasuring = Duration.between(start, finish).toMillis();
 		System.out.println("Time elapsed measuring: " + timeElapsedMeasuring);
 
-//		updateProcessedJsonFilesNumber(commsData);
+		updateProcessedJsonFilesCounter(commsData);
 
 		return metrics1;
 	}
 
-	//Method used in Kpis...
-	public void updateProcessedJsonFilesNumber(List<Comms> commsData) {
+	public void updateProcessedJsonFilesCounter(List<Comms> commsData) {
 
-		if (referenceCommsData == null) {
-			processedJSONFilesNumber = 1;
-			referenceCommsData = commsData;
-			addRowsToCounter(commsData);
-			return;
-		}
-		// TODO Improve more this comparing instruction...
-		if (referenceCommsData.size() == commsData.size()) {
-			System.out.println("processed Json file number should not update... Testing 'equals' method");
+		if (jsonDataFiles.isEmpty()) {
+			jsonDataFiles.add(commsData);
+			processedJSONFilesCounter = jsonDataFiles.size();
 			return;
 		}
 
-		referenceCommsData = commsData;
-		processedJSONFilesNumber++;
-		addRowsToCounter(commsData);
+		for (int i = 0; i < jsonDataFiles.size(); i++) {
+			if (commsData.size() == jsonDataFiles.get(i).size()) {
+
+				System.out.println("The files have the same size...");
+				for (int j = 0; j < commsData.size(); j++) {
+
+					if (commsData.get(j).getTimestamp() == null || jsonDataFiles.get(i).get(j).getTimestamp() == null) {
+						continue;
+					}
+
+					if (!commsData.get(j).getTimestamp().equals(jsonDataFiles.get(i).get(j).getTimestamp())) {
+						System.out.println("It's a new file!!! Add it to the List!");
+						jsonDataFiles.add(commsData);
+						System.out.println("Size of the files list: " + jsonDataFiles.size());
+						return;
+					}
+				}
+				System.out.println("File already checked!");
+				return;
+			}
+		}
+
+		jsonDataFiles.add(commsData);
+		processedJSONFilesCounter = jsonDataFiles.size();
 
 	}
 
@@ -129,8 +144,6 @@ public class MetricsService {
 		for (Comms communication : commsData) {
 
 			numberComms++;
-
-			System.out.println("Communication type: " + communication.getMessageType());
 
 			if (communication instanceof Call) {
 
@@ -390,7 +403,7 @@ public class MetricsService {
 	}
 
 	public int getProcessedJsonFilesNumber() {
-		return processedJSONFilesNumber;
+		return processedJSONFilesCounter;
 	}
 
 	private void addRowsToCounter(List<Comms> commsData) {

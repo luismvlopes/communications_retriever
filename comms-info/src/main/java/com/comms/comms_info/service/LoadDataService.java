@@ -9,8 +9,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,7 @@ public class LoadDataService {
 //	private int totalRowsRead = 0;
 	private long timeElapsedLoading;
 	
-	private Map<Integer, Long> processesAndDurations = new HashMap<Integer, Long>();
+//	private Map<Integer, Long> processesAndDurations = new HashMap<Integer, Long>();
 	
 
 	public void loadAndModifyJson(String date) {
