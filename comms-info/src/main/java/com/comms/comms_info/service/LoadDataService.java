@@ -33,15 +33,11 @@ public class LoadDataService {
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
 			File tempFile = new File(fileAddress);
-			System.out.println("tempJson.json file created in project root directory");
-
+			
 			FileWriter writer = new FileWriter(tempFile);
 
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
-				// Put this counter in the Metrics service...
-
-//				this.totalRowsRead++;
 
 				writer.write(inputLine);
 			}
@@ -68,12 +64,20 @@ public class LoadDataService {
 			reader = new BufferedReader(new FileReader(fileToBeModified));
 
 			String line = reader.readLine();
-			String newContent = "[" + line.replaceAll("\\}\\{", "\\},\\{") + "]";
-
 			
+			String correctedCurlyBraces = "[" + line.replaceAll("\\}\\{", "\\},\\{") + "]";
+			
+			String correctedQuotationMarks = correctedCurlyBraces.replaceAll("\": OK", "\": \"OK");
+			
+			String correctExtraCurlyB = correctedQuotationMarks.replaceAll("\\{\\}", "\\}");
+			
+			/*
+			 * Improve strings above and methods to be able to read more incomplete json files
+			 * 
+			 */
 			
 			writer = new FileWriter(fileToBeModified);
-			writer.write(newContent);
+			writer.write(correctExtraCurlyB);
 
 		} catch (IOException e) {
 			e.printStackTrace();

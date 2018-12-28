@@ -66,8 +66,7 @@ public class MetricsService {
 		Instant finish = Instant.now();
 
 		timeElapsedMeasuring = Duration.between(start, finish).toMillis();
-		System.out.println("Time elapsed measuring: " + timeElapsedMeasuring);
-
+		
 		updateProcessedJsonFilesCounter(commsData);
 
 		return metrics1;
