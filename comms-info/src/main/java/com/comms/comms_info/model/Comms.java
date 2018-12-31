@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "message_type", visible = true, defaultImpl = Call.class)
 // TODO see ways to improve defaultImpl, to differentiate between Call or Msg, or skip measurement when Property is unknown.
 @JsonSubTypes({ @Type(value = Call.class, name = "CALL"), @Type(value = Msg.class, name = "MSG") })
+//@JsonInclude(JsonInclude.Include.NON_DEFAULT) //test this annotation
 public abstract class Comms {
 
 	private String messageType;

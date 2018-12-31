@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -51,6 +53,8 @@ public class LoadDataService {
 		}
 	}
 
+	
+	
 	private void modifyJsonFile(String fileAddress) {
 
 		File fileToBeModified = new File(fileAddress);
@@ -59,25 +63,18 @@ public class LoadDataService {
 		BufferedReader reader = null;
 		FileWriter writer = null;
 
+		
 		try {
 
 			reader = new BufferedReader(new FileReader(fileToBeModified));
 
 			String line = reader.readLine();
-			
 			String correctedCurlyBraces = "[" + line.replaceAll("\\}\\{", "\\},\\{") + "]";
 			
-			String correctedQuotationMarks = correctedCurlyBraces.replaceAll("\": OK", "\": \"OK");
-			
-			String correctExtraCurlyB = correctedQuotationMarks.replaceAll("\\{\\}", "\\}");
-			
-			/*
-			 * Improve strings above and methods to be able to read more incomplete json files
-			 * 
-			 */
+			String flawsCheckedString = checkFlaws(correctedCurlyBraces);
 			
 			writer = new FileWriter(fileToBeModified);
-			writer.write(correctExtraCurlyB);
+			writer.write(flawsCheckedString);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -89,5 +86,27 @@ public class LoadDataService {
 				e2.printStackTrace();
 			}
 		}
+	}
+	private String checkFlaws(String textFile) {
+		
+//		String correctedQuotationMarks = textFile.replaceAll("\": OK", "\": \"OK"); //Only specific correction, not general...
+//		String correctExtraCurlyB = correctedQuotationMarks.replaceAll("\\{\\}", "\\}");
+		
+		Map<String, String> jsonFlaws = new HashMap<String, String>();
+				
+		jsonFlaws.put("\"status\" : \"OK\"", "\"status_code\" : \"OK\"");	
+		jsonFlaws.put("\": OK", "\": \"OK");
+		jsonFlaws.put("\\{\\}", "\\}");
+		
+		String correctedText = textFile;
+		
+		for(Map.Entry<String, String> entry: jsonFlaws.entrySet()) {
+			
+			if(correctedText.contains(entry.getKey())) {
+				correctedText.replaceAll(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		return correctedText;
 	}
 }
