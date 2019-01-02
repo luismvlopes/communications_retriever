@@ -1,6 +1,6 @@
 # communications_retriever
 
-Current solution being developed by Luis Lopes
+Solution developed by Luis Lopes
 
 Exercise from link https://github.com/vas-test/test1 
 
