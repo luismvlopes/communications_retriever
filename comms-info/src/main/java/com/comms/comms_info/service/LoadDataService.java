@@ -19,12 +19,12 @@ public class LoadDataService {
 
 	public void loadAndModifyJson(String date) {
 
-		extractJsonFile(date, destinAddress);
-		modifyJsonFile(destinAddress);
+		downloadJsonFile(date, destinAddress);
+//		modifyJsonFile(destinAddress);
 
 	}
 
-	private void extractJsonFile(String date, String fileAddress) {
+	private void downloadJsonFile(String date, String fileAddress) {
 
 		String fileURL = "https://raw.githubusercontent.com/vas-test/test1/master/logs/MCP_" + date + ".json";
 		URL url;
@@ -53,7 +53,7 @@ public class LoadDataService {
 		}
 	}
 
-	private void modifyJsonFile(String fileAddress) {
+	public void cleanJsonFile(String fileAddress) {
 
 		File fileToBeModified = new File(fileAddress);
 
@@ -108,4 +108,5 @@ public class LoadDataService {
 
 		return correctedText;
 	}
+
 }

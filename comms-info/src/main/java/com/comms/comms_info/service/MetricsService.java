@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.comms.comms_info.model.Call;
@@ -32,6 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class MetricsService {
 
+	@Autowired
+	private LoadDataService loadDataService;
+	
 	private List<Comms> commsData;
 	private List<List<Comms>> jsonDataFiles = new ArrayList<List<Comms>>();
 
@@ -71,9 +75,13 @@ public class MetricsService {
 
 		return metrics1;
 	}
+	
+	
 
 	private List<Comms> accessDataFile() {
 
+		loadDataService.cleanJsonFile(tempFileAddress);
+		
 		BufferedReader reader = null;
 
 		String jsonArray = "";
