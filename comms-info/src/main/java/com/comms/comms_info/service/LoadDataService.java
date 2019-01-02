@@ -35,7 +35,7 @@ public class LoadDataService {
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
 			File tempFile = new File(fileAddress);
-			
+
 			FileWriter writer = new FileWriter(tempFile);
 
 			String inputLine;
@@ -53,8 +53,6 @@ public class LoadDataService {
 		}
 	}
 
-	
-	
 	private void modifyJsonFile(String fileAddress) {
 
 		File fileToBeModified = new File(fileAddress);
@@ -63,16 +61,15 @@ public class LoadDataService {
 		BufferedReader reader = null;
 		FileWriter writer = null;
 
-		
 		try {
 
 			reader = new BufferedReader(new FileReader(fileToBeModified));
 
 			String line = reader.readLine();
 			String correctedCurlyBraces = "[" + line.replaceAll("\\}\\{", "\\},\\{") + "]";
-			
-			String flawsCheckedString = checkFlaws(correctedCurlyBraces);
-			
+
+			String flawsCheckedString = clearFlaws(correctedCurlyBraces);
+
 			writer = new FileWriter(fileToBeModified);
 			writer.write(flawsCheckedString);
 
@@ -87,26 +84,28 @@ public class LoadDataService {
 			}
 		}
 	}
-	private String checkFlaws(String textFile) {
-		
-//		String correctedQuotationMarks = textFile.replaceAll("\": OK", "\": \"OK"); //Only specific correction, not general...
-//		String correctExtraCurlyB = correctedQuotationMarks.replaceAll("\\{\\}", "\\}");
-		
+
+	private String clearFlaws(String textFile) {
+
+		String textFile1 = textFile.replaceAll("\\{\\}", "\\}");
+
 		Map<String, String> jsonFlaws = new HashMap<String, String>();
-				
-		jsonFlaws.put("\"status\" : \"OK\"", "\"status_code\" : \"OK\"");	
+
+		/*
+		 * Insert flaws and corrections here
+		 */
+		jsonFlaws.put("\"status\": \"OK\"", "\"status_code\": \"OK\"");
 		jsonFlaws.put("\": OK", "\": \"OK");
-		jsonFlaws.put("\\{\\}", "\\}");
-		
-		String correctedText = textFile;
-		
-		for(Map.Entry<String, String> entry: jsonFlaws.entrySet()) {
-			
-			if(correctedText.contains(entry.getKey())) {
-				correctedText.replaceAll(entry.getKey(), entry.getValue());
+
+		String correctedText = textFile1;
+
+		for (Map.Entry<String, String> entry : jsonFlaws.entrySet()) {
+
+			if (correctedText.contains(entry.getKey())) {
+				correctedText = correctedText.replaceAll(entry.getKey(), entry.getValue());
 			}
 		}
-		
+
 		return correctedText;
 	}
 }
